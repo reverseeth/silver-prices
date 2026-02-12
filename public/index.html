@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silver Prices | SGE & COMEX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #06060a;
+      --bg-card: #0d0d14;
+      --bg-card-hover: #111119;
+      --border: #1a1a26;
+      --border-subtle: #13131d;
+      --text-primary: #e8e8ed;
+      --text-secondary: #7a7a8e;
+      --text-muted: #4a4a5e;
+      --accent: #8b8b9e;
+      --silver: #c0c0cc;
+      --delayed-bg: #1c1612;
+      --delayed-text: #b08a5c;
+      --delayed-border: #2a1f15;
+      --green: #3fb68b;
+      --red: #e85d5d;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* --- Header --- */
+    header {
+      padding: 48px 0 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    header h1 span {
+      color: var(--silver);
+    }
+
+    header p {
+      margin-top: 8px;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* --- Grid --- */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- Card --- */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: background 0.2s ease;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .card-header {
+      padding: 20px 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-exchange {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .card-contract {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .badge-delayed {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.625rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--delayed-text);
+      background: var(--delayed-bg);
+      border: 1px solid var(--delayed-border);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+
+    .badge-delayed::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--delayed-text);
+      opacity: 0.7;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.625rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--green);
+      background: rgba(63, 182, 139, 0.08);
+      border: 1px solid rgba(63, 182, 139, 0.15);
+      border-radius: 4px;
+      padding: 3px 8px;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-live 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* --- SGE Card Body --- */
+    .sge-body {
+      padding: 24px 24px 20px;
+    }
+
+    .price-main {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.75rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .price-currency {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-left: 4px;
+    }
+
+    .price-unit {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .sge-meta {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    .meta-label {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .meta-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--text-secondary);
+    }
+
+    .sge-range {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .range-item {
+      text-align: center;
+    }
+
+    .range-label {
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .range-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    /* --- Loading / Error States --- */
+    .sge-loading {
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--text-secondary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .sge-error {
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .error-text {
+      font-size: 0.75rem;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .retry-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .retry-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--text-muted);
+    }
+
+    /* --- COMEX Card --- */
+    .comex-widget {
+      height: 420px;
+    }
+
+    .comex-widget .tradingview-widget-container,
+    .comex-widget .tradingview-widget-container__widget {
+      height: 100%;
+      width: 100%;
+    }
+
+    /* --- Footer --- */
+    footer {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      header {
+        padding: 32px 0 28px;
+      }
+
+      header h1 {
+        font-size: 1.25rem;
+      }
+
+      .price-main {
+        font-size: 2.25rem;
+      }
+
+      .comex-widget {
+        height: 360px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+
+      .price-main {
+        font-size: 1.875rem;
+      }
+
+      .card-header {
+        padding: 16px 20px 0;
+      }
+
+      .sge-body {
+        padding: 20px 20px 16px;
+      }
+
+      .comex-widget {
+        height: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Silver <span>Ag</span></h1>
+      <p>Shanghai SGE vs COMEX spot price</p>
+    </header>
+
+    <div class="grid">
+
+      <!-- === SGE Card === -->
+      <div class="card" id="sge-card">
+        <div class="card-header">
+          <div>
+            <div class="card-exchange">Shanghai Gold Exchange</div>
+            <div class="card-contract">Ag(T+D) contract</div>
+          </div>
+          <div class="badge-delayed">Delayed</div>
+        </div>
+
+        <div id="sge-content">
+          <div class="sge-loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Fetching SGE data...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === COMEX Card === -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-exchange">COMEX</div>
+            <div class="card-contract">XAG/USD spot</div>
+          </div>
+          <div class="badge-live">Live</div>
+        </div>
+
+        <div class="comex-widget">
+          <!-- TradingView Widget BEGIN -->
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+              "autosize": true,
+              "symbol": "TVC:SILVER",
+              "interval": "D",
+              "timezone": "Etc/UTC",
+              "theme": "dark",
+              "style": "1",
+              "locale": "en",
+              "backgroundColor": "rgba(13, 13, 20, 1)",
+              "gridColor": "rgba(26, 26, 38, 0.4)",
+              "hide_top_toolbar": true,
+              "hide_legend": false,
+              "allow_symbol_change": false,
+              "save_image": false,
+              "calendar": false,
+              "hide_volume": true,
+              "support_host": "https://www.tradingview.com"
+            }
+            </script>
+          </div>
+          <!-- TradingView Widget END -->
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      <p>
+        SGE data sourced from en.sge.com.cn (delayed quotes, cached up to 30 min).
+        <br>
+        COMEX data via TradingView (real-time). Exchange rate: USD/CNY via open.er-api.com.
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    const SGE_API = '/api/shanghai';
+    const REFRESH_INTERVAL = 5 * 60 * 1000; // Refresh frontend every 5 min
+
+    function formatPrice(n) {
+      return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function formatTimestamp(iso) {
+      const d = new Date(iso);
+      const date = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      const time = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      return date + '  ' + time;
+    }
+
+    function renderSGE(data) {
+      const el = document.getElementById('sge-content');
+      el.innerHTML = `
+        <div class="sge-body">
+          <div class="price-main">
+            ${formatPrice(data.usd_per_oz)}<span class="price-currency">USD</span>
+          </div>
+          <div class="price-unit">per troy ounce</div>
+
+          <div class="sge-range">
+            <div class="range-item">
+              <div class="range-label">Open</div>
+              <div class="range-value">${data.rmb_open ? formatPrice(data.rmb_open) : '--'}</div>
+            </div>
+            <div class="range-item">
+              <div class="range-label">High</div>
+              <div class="range-value">${data.rmb_high ? formatPrice(data.rmb_high) : '--'}</div>
+            </div>
+            <div class="range-item">
+              <div class="range-label">Low</div>
+              <div class="range-value">${data.rmb_low ? formatPrice(data.rmb_low) : '--'}</div>
+            </div>
+          </div>
+
+          <div class="sge-meta">
+            <div class="meta-row">
+              <span class="meta-label">Original price</span>
+              <span class="meta-value">${formatPrice(data.rmb_per_kg)} RMB/kg</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">USD/CNY rate</span>
+              <span class="meta-value">${data.usd_cny_rate.toFixed(4)}</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Last updated</span>
+              <span class="meta-value">${formatTimestamp(data.timestamp)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderError(message) {
+      const el = document.getElementById('sge-content');
+      el.innerHTML = `
+        <div class="sge-error">
+          <div class="error-text">${message}</div>
+          <button class="retry-btn" onclick="fetchSGE()">Retry</button>
+        </div>
+      `;
+    }
+
+    async function fetchSGE() {
+      const el = document.getElementById('sge-content');
+      el.innerHTML = `
+        <div class="sge-loading">
+          <div class="spinner"></div>
+          <div class="loading-text">Fetching SGE data...</div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(SGE_API);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to fetch SGE data');
+        }
+
+        renderSGE(data);
+      } catch (err) {
+        renderError(err.message || 'Network error. Check your connection.');
+      }
+    }
+
+    // Initial fetch
+    fetchSGE();
+
+    // Auto-refresh
+    setInterval(fetchSGE, REFRESH_INTERVAL);
+  </script>
+
+</body>
+</html>
