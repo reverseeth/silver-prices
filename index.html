@@ -1,1 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silver Premium Monitor | SGE vs COMEX</title>
+  <meta name="description" content="Real-time Shanghai vs COMEX silver price premium tracker">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --bg: #050508;
+      --bg-elevated: #0a0a10;
+      --bg-card: #0c0c14;
+      --bg-card-inner: #0e0e18;
+      --border: #16162a;
+      --border-light: #1e1e38;
+      --text-1: #ededf4;
+      --text-2: #9898b0;
+      --text-3: #5c5c78;
+      --text-4: #3a3a52;
+      --silver: #b8b8d0;
+      --green: #34d399;
+      --green-dim: rgba(52, 211, 153, 0.08);
+      --green-border: rgba(52, 211, 153, 0.15);
+      --red: #f87171;
+      --red-dim: rgba(248, 113, 113, 0.08);
+      --red-border: rgba(248, 113, 113, 0.15);
+      --amber: #c29553;
+      --amber-dim: rgba(194, 149, 83, 0.08);
+      --amber-border: rgba(194, 149, 83, 0.18);
+      --blue: #60a5fa;
+      --blue-dim: rgba(96, 165, 250, 0.06);
+      --glow-premium: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(52, 211, 153, 0.04) 0%, transparent 70%);
+      --glow-discount: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(248, 113, 113, 0.04) 0%, transparent 70%);
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===================== HEADER ===================== */
+    .header {
+      padding: 44px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #3a3a5c 0%, #1a1a30 100%);
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--silver);
+    }
+
+    .logo-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-1);
+      letter-spacing: -0.01em;
+    }
+
+    .status-dot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.6875rem;
+      color: var(--text-3);
+    }
+
+    .status-dot::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* ===================== PREMIUM HERO ===================== */
+    .premium-hero {
+      margin: 24px 0;
+      padding: 32px 0 28px;
+      text-align: center;
+      position: relative;
+      border-radius: 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .premium-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--glow-premium);
+      pointer-events: none;
+      transition: background 0.6s ease;
+    }
+
+    .premium-hero.is-discount::before {
+      background: var(--glow-discount);
+    }
+
+    .premium-label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .premium-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3.25rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .premium-value.positive { color: var(--green); }
+    .premium-value.negative { color: var(--red); }
+    .premium-value.neutral  { color: var(--text-3); }
+
+    .premium-sub {
+      margin-top: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      color: var(--text-3);
+      position: relative;
+    }
+
+    .premium-sub span {
+      color: var(--text-2);
+    }
+
+    .premium-desc {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--text-4);
+      position: relative;
+    }
+
+    /* ===================== CARDS GRID ===================== */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-light);
+    }
+
+    /* --- Card Header --- */
+    .card-head {
+      padding: 18px 22px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .card-source {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-2);
+    }
+
+    .card-pair {
+      font-size: 0.6875rem;
+      color: var(--text-4);
+      margin-top: 2px;
+    }
+
+    .tag {
+      font-size: 0.5625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .tag::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+    }
+
+    .tag-live {
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid var(--green-border);
+    }
+
+    .tag-live::before { background: var(--green); animation: blink 2s ease-in-out infinite; }
+
+    .tag-delayed {
+      color: var(--amber);
+      background: var(--amber-dim);
+      border: 1px solid var(--amber-border);
+    }
+
+    .tag-delayed::before { background: var(--amber); opacity: 0.7; }
+
+    /* --- Card Body --- */
+    .card-body {
+      padding: 20px 22px 22px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .price-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.125rem;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--text-1);
+      line-height: 1;
+    }
+
+    .price-curr {
+      font-size: 0.8125rem;
+      font-weight: 400;
+      color: var(--text-3);
+    }
+
+    .price-unit {
+      font-size: 0.6875rem;
+      color: var(--text-4);
+      margin-top: 4px;
+    }
+
+    /* --- Change badge --- */
+    .change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .change.up {
+      color: var(--green);
+      background: var(--green-dim);
+    }
+
+    .change.down {
+      color: var(--red);
+      background: var(--red-dim);
+    }
+
+    .change.flat {
+      color: var(--text-3);
+      background: var(--blue-dim);
+    }
+
+    .change-arrow { font-size: 0.625rem; }
+
+    /* --- Metadata --- */
+    .meta {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .meta-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.6875rem;
+    }
+
+    .meta-k {
+      color: var(--text-4);
+    }
+
+    .meta-v {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--text-2);
+    }
+
+    /* --- Range bar (SGE) --- */
+    .range-row {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .range-cell {
+      text-align: center;
+      padding: 8px 0;
+      background: var(--bg-card-inner);
+      border-radius: 8px;
+    }
+
+    .range-label {
+      font-size: 0.5625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-4);
+      margin-bottom: 2px;
+    }
+
+    .range-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-2);
+    }
+
+    /* ===================== LOADING / ERROR ===================== */
+    .card-loading, .card-error {
+      padding: 48px 22px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--text-3);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-msg {
+      font-size: 0.75rem;
+      color: var(--text-4);
+    }
+
+    .error-msg {
+      font-size: 0.75rem;
+      color: var(--red);
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .btn-retry {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--text-2);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 18px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-retry:hover {
+      color: var(--text-1);
+      border-color: var(--text-3);
+    }
+
+    /* --- Premium loading state --- */
+    .premium-loading .premium-value {
+      color: var(--text-4);
+    }
+
+    /* ===================== FOOTER ===================== */
+    .footer {
+      padding: 20px 0 36px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer p {
+      font-size: 0.625rem;
+      color: var(--text-4);
+      line-height: 1.9;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 640px) {
+      .wrap { padding: 0 14px; }
+      .header { padding-top: 28px; }
+      .grid { grid-template-columns: 1fr; gap: 12px; }
+      .premium-hero { padding: 24px 16px 22px; margin: 16px 0; }
+      .premium-value { font-size: 2.5rem; }
+      .premium-sub { font-size: 0.75rem; }
+      .price-big { font-size: 1.75rem; }
+      .card-head { padding: 14px 16px 0; }
+      .card-body { padding: 16px 16px 18px; }
+      .logo-text { font-size: 0.8125rem; }
+      .range-row { gap: 6px; }
+      .range-cell { padding: 6px 0; }
+    }
+
+    @media (max-width: 380px) {
+      .premium-value { font-size: 2rem; }
+      .price-big { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-mark">Ag</div>
+      <div class="logo-text">Silver Premium</div>
+    </div>
+    <div class="status-dot" id="status-text">Connecting...</div>
+  </header>
+
+  <!-- PREMIUM HERO -->
+  <section class="premium-hero premium-loading" id="premium-hero">
+    <div class="premium-label">Shanghai Premium over COMEX</div>
+    <div class="premium-value neutral" id="premium-pct">--</div>
+    <div class="premium-sub" id="premium-usd">Calculating...</div>
+    <div class="premium-desc" id="premium-desc">SGE Ag(T+D) vs XAG/USD spot</div>
+  </section>
+
+  <!-- PRICE CARDS -->
+  <div class="grid">
+
+    <!-- SGE CARD -->
+    <div class="card" id="sge-card">
+      <div class="card-head">
+        <div>
+          <div class="card-source">Shanghai SGE</div>
+          <div class="card-pair">Ag(T+D)</div>
+        </div>
+        <div class="tag tag-delayed">Delayed</div>
+      </div>
+      <div id="sge-body">
+        <div class="card-loading">
+          <div class="spinner"></div>
+          <div class="loading-msg">Fetching SGE data...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMEX CARD -->
+    <div class="card" id="comex-card">
+      <div class="card-head">
+        <div>
+          <div class="card-source">COMEX Spot</div>
+          <div class="card-pair">XAG / USD</div>
+        </div>
+        <div class="tag tag-live">Live</div>
+      </div>
+      <div id="comex-body">
+        <div class="card-loading">
+          <div class="spinner"></div>
+          <div class="loading-msg">Fetching COMEX data...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>
+      SGE: en.sge.com.cn delayed quotes, cached 60s&nbsp;&nbsp;|&nbsp;&nbsp;COMEX: goldprice.org live feed
+      <br>
+      FX rate: USD/CNY via open.er-api.com&nbsp;&nbsp;|&nbsp;&nbsp;Formula: RMB/kg / (32.1507 x USD/CNY)
+    </p>
+  </footer>
+
+</div>
+
+<script>
+const API = '/api/prices';
+const POLL_MS = 30 * 1000; // 30 seconds
+
+// ── Helpers ──────────────────────────────────────────
+function fmt(n, decimals = 2) {
+  return n.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+}
+
+function fmtMono(n, decimals = 2) {
+  return fmt(n, decimals);
+}
+
+function fmtTime(iso) {
+  const d = new Date(iso);
+  const opts = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  return d.toLocaleDateString('en-US', opts);
+}
+
+function changeClass(val) {
+  if (val > 0) return 'up';
+  if (val < 0) return 'down';
+  return 'flat';
+}
+
+function arrow(val) {
+  if (val > 0) return '&#9650;';
+  if (val < 0) return '&#9660;';
+  return '&#9644;';
+}
+
+// ── Render COMEX ─────────────────────────────────────
+function renderCOMEX(comex) {
+  const dir = changeClass(comex.changePercent);
+  document.getElementById('comex-body').innerHTML = `
+    <div class="card-body">
+      <div class="price-row">
+        <span class="price-big">${fmtMono(comex.price, 4)}</span>
+        <span class="price-curr">USD</span>
+      </div>
+      <div class="price-unit">per troy ounce</div>
+
+      <div class="change ${dir}">
+        <span class="change-arrow">${arrow(comex.changePercent)}</span>
+        ${fmt(Math.abs(comex.change), 4)} (${fmt(Math.abs(comex.changePercent), 2)}%)
+      </div>
+
+      <div class="meta">
+        <div class="meta-line">
+          <span class="meta-k">Prev close</span>
+          <span class="meta-v">${fmtMono(comex.prevClose, 4)}</span>
+        </div>
+        <div class="meta-line">
+          <span class="meta-k">Source time</span>
+          <span class="meta-v">${comex.timestamp}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Render SGE ───────────────────────────────────────
+function renderSGE(sge, fx) {
+  document.getElementById('sge-body').innerHTML = `
+    <div class="card-body">
+      <div class="price-row">
+        <span class="price-big">${fmtMono(sge.usd_per_oz, 4)}</span>
+        <span class="price-curr">USD</span>
+      </div>
+      <div class="price-unit">per troy ounce (converted)</div>
+
+      <div class="range-row">
+        <div class="range-cell">
+          <div class="range-label">Open</div>
+          <div class="range-val">${sge.rmb_open ? fmt(sge.rmb_open, 0) : '--'}</div>
+        </div>
+        <div class="range-cell">
+          <div class="range-label">High</div>
+          <div class="range-val">${sge.rmb_high ? fmt(sge.rmb_high, 0) : '--'}</div>
+        </div>
+        <div class="range-cell">
+          <div class="range-label">Low</div>
+          <div class="range-val">${sge.rmb_low ? fmt(sge.rmb_low, 0) : '--'}</div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div class="meta-line">
+          <span class="meta-k">RMB/kg</span>
+          <span class="meta-v">${fmt(sge.rmb_per_kg, 0)}</span>
+        </div>
+        <div class="meta-line">
+          <span class="meta-k">USD/CNY</span>
+          <span class="meta-v">${fmt(fx.usd_cny, 4)}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Render Premium ───────────────────────────────────
+function renderPremium(premium) {
+  const hero = document.getElementById('premium-hero');
+  const pctEl = document.getElementById('premium-pct');
+  const usdEl = document.getElementById('premium-usd');
+  const descEl = document.getElementById('premium-desc');
+
+  hero.classList.remove('premium-loading');
+
+  const sign = premium.percent >= 0 ? '+' : '';
+  const pctClass = premium.percent > 0 ? 'positive' : premium.percent < 0 ? 'negative' : 'neutral';
+
+  pctEl.className = 'premium-value ' + pctClass;
+  pctEl.textContent = sign + fmt(premium.percent, 2) + '%';
+
+  const usdSign = premium.usd >= 0 ? '+' : '';
+  usdEl.innerHTML = '<span>' + usdSign + fmt(premium.usd, 4) + ' USD/oz</span>';
+
+  if (premium.percent > 0) {
+    hero.classList.remove('is-discount');
+    descEl.textContent = 'Shanghai silver trades at a premium to international spot';
+  } else if (premium.percent < 0) {
+    hero.classList.add('is-discount');
+    descEl.textContent = 'Shanghai silver trades at a discount to international spot';
+  } else {
+    descEl.textContent = 'Shanghai and COMEX prices are aligned';
+  }
+}
+
+// ── Render Error ─────────────────────────────────────
+function renderCardError(elementId, msg) {
+  document.getElementById(elementId).innerHTML = `
+    <div class="card-error">
+      <div class="error-msg">${msg}</div>
+      <button class="btn-retry" onclick="fetchData()">Retry</button>
+    </div>
+  `;
+}
+
+function renderPremiumError() {
+  const hero = document.getElementById('premium-hero');
+  hero.classList.add('premium-loading');
+  document.getElementById('premium-pct').textContent = '--';
+  document.getElementById('premium-usd').textContent = 'Waiting for data...';
+}
+
+// ── Main Fetch ───────────────────────────────────────
+let lastData = null;
+
+async function fetchData() {
+  const statusEl = document.getElementById('status-text');
+  statusEl.textContent = 'Updating...';
+
+  try {
+    const res = await fetch(API);
+    const text = await res.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      console.error('API returned non-JSON:', text.substring(0, 200));
+      throw new Error('Server returned invalid response. Retry in a moment.');
+    }
+
+    lastData = data;
+
+    // Render COMEX
+    if (data.comex) {
+      renderCOMEX(data.comex);
+    } else {
+      const comexErr = data.errors?.find(e => e.source === 'comex');
+      renderCardError('comex-body', comexErr?.message || 'COMEX data unavailable');
+    }
+
+    // Render SGE
+    if (data.sge && data.fx) {
+      renderSGE(data.sge, data.fx);
+    } else {
+      const sgeErr = data.errors?.find(e => e.source === 'sge' || e.source === 'fx');
+      renderCardError('sge-body', sgeErr?.message || 'SGE data unavailable');
+    }
+
+    // Render Premium
+    if (data.premium) {
+      renderPremium(data.premium);
+    } else {
+      renderPremiumError();
+    }
+
+    statusEl.textContent = 'Live';
+
+  } catch (err) {
+    console.error('Fetch error:', err);
+    statusEl.textContent = 'Error';
+
+    if (!lastData) {
+      renderCardError('sge-body', err.message || 'Network error');
+      renderCardError('comex-body', err.message || 'Network error');
+      renderPremiumError();
+    }
+  }
+}
+
+// ── Init ─────────────────────────────────────────────
+fetchData();
+setInterval(fetchData, POLL_MS);
+</script>
+
+</body>
+</html>
