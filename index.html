@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silver Premium | Shanghai vs COMEX</title>
+  <title>Silver: Shanghai vs COMEX</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -54,28 +54,37 @@
        ============================================================ */
     .header {
       padding: 52px 0 0;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: flex-start; justify-content: space-between;
       opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) forwards;
     }
 
     .brand { display: flex; align-items: center; gap: 14px; }
 
     .brand-mark {
-      width: 32px; height: 32px; border-radius: 9px;
+      width: 34px; height: 34px; border-radius: 10px;
       background: var(--g2); border: 1px solid var(--g4);
       display: grid; place-items: center;
-      font-size: 0.8125rem; font-weight: 600; color: var(--g8);
+      font-size: 0.875rem; font-weight: 600; color: var(--g8);
       letter-spacing: -0.02em;
     }
 
-    .brand-text {
-      font-size: 1rem; font-weight: 500; color: var(--white);
+    .brand-info { display: flex; flex-direction: column; gap: 2px; }
+
+    .brand-title {
+      font-size: 1.0625rem; font-weight: 600; color: var(--white);
       letter-spacing: -0.025em;
+    }
+
+    .brand-desc {
+      font-size: 0.8125rem; font-weight: 400; color: var(--g7);
+      letter-spacing: -0.005em;
     }
 
     .header-time {
       font-size: 0.8125rem; color: var(--g6);
       letter-spacing: -0.01em;
+      text-align: right;
+      padding-top: 3px;
     }
 
     /* ============================================================
@@ -100,25 +109,6 @@
       background: linear-gradient(90deg, transparent, var(--g5), transparent);
     }
 
-    .hero-glow {
-      position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
-      width: 320px; height: 160px;
-      background: radial-gradient(ellipse, var(--green-soft) 0%, transparent 70%);
-      pointer-events: none;
-      transition: opacity .6s ease;
-      opacity: 0;
-    }
-
-    .hero-glow.pos {
-      background: radial-gradient(ellipse, var(--green-soft) 0%, transparent 70%);
-      opacity: 1;
-    }
-
-    .hero-glow.neg {
-      background: radial-gradient(ellipse, var(--red-soft) 0%, transparent 70%);
-      opacity: 1;
-    }
-
     .hero-icon {
       position: relative; z-index: 1;
       display: inline-flex; align-items: center; justify-content: center;
@@ -133,8 +123,8 @@
 
     .hero-label {
       position: relative; z-index: 1;
-      font-size: 0.8125rem; font-weight: 500; color: var(--g6);
-      letter-spacing: 0.12em; text-transform: uppercase;
+      font-size: 0.875rem; font-weight: 500; color: var(--g7);
+      letter-spacing: 0.1em; text-transform: uppercase;
       margin-bottom: 22px;
     }
 
@@ -152,7 +142,7 @@
     .hero-sub {
       position: relative; z-index: 1;
       margin-top: 18px;
-      font-size: 1.0625rem; font-weight: 400; color: var(--g6);
+      font-size: 1.0625rem; font-weight: 400; color: var(--g7);
       letter-spacing: -0.01em;
     }
 
@@ -161,8 +151,18 @@
     .hero-note {
       position: relative; z-index: 1;
       margin-top: 28px;
-      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
+      font-size: 0.875rem; font-weight: 400; color: var(--g7);
       letter-spacing: -0.005em;
+      line-height: 1.6;
+    }
+
+    .hero-context {
+      position: relative; z-index: 1;
+      margin-top: 16px;
+      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
+      line-height: 1.7;
+      max-width: 540px;
+      margin-left: auto; margin-right: auto;
     }
 
     /* ============================================================
@@ -190,11 +190,7 @@
       opacity: 0; transition: opacity .3s ease;
     }
 
-    .card:hover {
-      border-color: var(--g4);
-      transform: translateY(-3px);
-    }
-
+    .card:hover { border-color: var(--g4); transform: translateY(-3px); }
     .card:hover::before { opacity: 1; }
 
     .card-inner { padding: 30px 30px 34px; }
@@ -217,13 +213,13 @@
     .card-icon svg { width: 18px; height: 18px; }
 
     .card-title {
-      font-size: 1.0625rem; font-weight: 500; color: var(--g11);
+      font-size: 1.0625rem; font-weight: 600; color: var(--g11);
       letter-spacing: -0.025em;
     }
 
     .card-subtitle {
-      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
-      margin-top: 3px; letter-spacing: -0.005em;
+      font-size: 0.8125rem; font-weight: 400; color: var(--g7);
+      margin-top: 3px;
     }
 
     /* Badges */
@@ -276,11 +272,11 @@
       letter-spacing: -0.04em; line-height: 1;
     }
 
-    .price-cur { font-size: 0.9375rem; font-weight: 400; color: var(--g6); }
+    .price-cur { font-size: 0.9375rem; font-weight: 400; color: var(--g7); }
 
     .price-desc {
       margin-top: 8px;
-      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
+      font-size: 0.875rem; font-weight: 400; color: var(--g7);
     }
 
     /* Change */
@@ -305,12 +301,9 @@
 
     .meta-row { display: flex; justify-content: space-between; align-items: center; }
 
-    .meta-k { font-size: 0.8125rem; font-weight: 400; color: var(--g6); }
+    .meta-k { font-size: 0.875rem; font-weight: 400; color: var(--g7); }
 
-    .meta-v {
-      font-size: 0.9375rem; font-weight: 600; color: var(--g9);
-      letter-spacing: -0.02em;
-    }
+    .meta-v { font-size: 0.9375rem; font-weight: 600; color: var(--g9); letter-spacing: -0.02em; }
 
     /* Range chips */
     .ranges {
@@ -327,13 +320,13 @@
     .chip:hover { border-color: var(--g5); transform: translateY(-1px); }
 
     .chip-label {
-      font-size: 0.6875rem; font-weight: 500;
-      text-transform: uppercase; letter-spacing: 0.07em;
-      color: var(--g6); margin-bottom: 7px;
+      font-size: 0.75rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--g7); margin-bottom: 7px;
     }
 
     .chip-val {
-      font-size: 1rem; font-weight: 600; color: var(--g10);
+      font-size: 1.0625rem; font-weight: 600; color: var(--g10);
       letter-spacing: -0.02em;
     }
 
@@ -351,13 +344,13 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .state-text { font-size: 0.875rem; color: var(--g6); }
+    .state-text { font-size: 0.9375rem; color: var(--g7); }
 
-    .err-text { font-size: 0.875rem; color: var(--red); opacity: .75; margin-bottom: 18px; }
+    .err-text { font-size: 0.9375rem; color: var(--red); opacity: .75; margin-bottom: 18px; }
 
     .btn {
       font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
-      font-size: 0.8125rem; font-weight: 600;
+      font-size: 0.875rem; font-weight: 600;
       color: var(--g9); background: var(--g3); border: 1px solid var(--g4);
       border-radius: 10px; padding: 10px 26px; cursor: pointer;
       transition: all .2s ease;
@@ -375,7 +368,7 @@
       opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) .24s forwards;
     }
 
-    .footer p { font-size: 0.75rem; color: var(--g6); line-height: 1.9; }
+    .footer p { font-size: 0.8125rem; color: var(--g6); line-height: 1.9; }
 
     /* ============================================================
        ANIMATIONS
@@ -396,10 +389,12 @@
        ============================================================ */
     @media (max-width: 680px) {
       .page { padding: 0 18px 56px; }
-      .header { padding-top: 36px; }
+      .header { padding-top: 36px; flex-direction: column; gap: 16px; }
+      .header-time { text-align: left; }
       .hero { margin: 36px 0; padding: 44px 24px 40px; border-radius: 18px; }
       .hero-value { font-size: 3.25rem; }
       .hero-sub { font-size: 0.9375rem; }
+      .hero-context { font-size: 0.75rem; }
       .cards { grid-template-columns: 1fr; gap: 12px; }
       .card { border-radius: 18px; }
       .card-inner { padding: 26px 24px 30px; }
@@ -427,21 +422,24 @@
   <header class="header">
     <div class="brand">
       <div class="brand-mark">Ag</div>
-      <span class="brand-text">Silver Premium</span>
+      <div class="brand-info">
+        <span class="brand-title">Silver: Shanghai vs COMEX</span>
+        <span class="brand-desc">Comparativo de preços entre prata física real (SGE) e papel (COMEX)</span>
+      </div>
     </div>
     <div class="header-time" id="clock"></div>
   </header>
 
   <!-- PREMIUM HERO -->
   <section class="hero" id="hero">
-    <div class="hero-glow" id="hero-glow"></div>
     <div class="hero-icon" id="hero-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7l7-4 7 4"/><path d="M5 7l-1 6c0 1.66 1.34 2 2 2h0c.66 0 2-.34 2-2L7 7"/><path d="M17 7l-1 6c0 1.66 1.34 2 2 2h0c.66 0 2-.34 2-2l-1-6"/></svg>
     </div>
-    <div class="hero-label">Premium Shanghai</div>
+    <div class="hero-label">Prêmio Shanghai</div>
     <div class="hero-value nil" id="h-pct">--%</div>
     <div class="hero-sub" id="h-usd">Carregando dados...</div>
-    <div class="hero-note" id="h-note">SGE Ag(T+D) em relacao ao COMEX XAG/USD</div>
+    <div class="hero-note" id="h-note">SGE Ag(T+D) em relação ao COMEX XAG/USD</div>
+    <div class="hero-context" id="h-ctx"></div>
   </section>
 
   <!-- CARDS -->
@@ -457,7 +455,7 @@
             </div>
             <div>
               <div class="card-title">Shanghai SGE</div>
-              <div class="card-subtitle">Ag(T+D)</div>
+              <div class="card-subtitle">Ag(T+D) — Prata física</div>
             </div>
           </div>
           <div class="badge badge-delayed"><span class="badge-dot"></span>Delayed</div>
@@ -478,7 +476,7 @@
             </div>
             <div>
               <div class="card-title">COMEX</div>
-              <div class="card-subtitle">XAG / USD</div>
+              <div class="card-subtitle">XAG / USD — Spot</div>
             </div>
           </div>
           <div class="badge badge-live"><span class="badge-dot"></span>Live</div>
@@ -492,7 +490,7 @@
   </div>
 
   <footer class="footer">
-    <p>Dados atualizados a cada 30 segundos. Cotacoes SGE com atraso. Taxa de cambio USD/CNY.</p>
+    <p>Dados atualizados a cada 30 segundos. Cotações SGE com atraso (cache de 30 min). Taxa de câmbio USD/CNY.</p>
   </footer>
 
 </div>
@@ -521,6 +519,13 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
+function fmtTimestamp(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR', {
+    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+}
+
 function renderCOMEX(c) {
   const cls = c.changePercent > 0 ? 'up' : c.changePercent < 0 ? 'dn' : 'fl';
   const arrow = c.changePercent > 0 ? '\u25B2' : c.changePercent < 0 ? '\u25BC' : '\u2014';
@@ -530,7 +535,7 @@ function renderCOMEX(c) {
       <span class="price-num" id="comex-p">${fmtUS(c.price, 4)}</span>
       <span class="price-cur">USD/oz</span>
     </div>
-    <div class="price-desc">por onca troy</div>
+    <div class="price-desc">por onça troy</div>
     <div class="change ${cls}">
       <span class="change-arr">${arrow}</span>
       ${fmtUS(Math.abs(c.change), 4)}&nbsp;&nbsp;&nbsp;${fmtUS(Math.abs(c.changePercent), 2)}%
@@ -562,11 +567,11 @@ function renderSGE(s, fx) {
         <div class="chip-val">${s.rmb_open ? fmt(s.rmb_open, 0) : '\u2014'}</div>
       </div>
       <div class="chip">
-        <div class="chip-label">Maxima</div>
+        <div class="chip-label">Máxima</div>
         <div class="chip-val">${s.rmb_high ? fmt(s.rmb_high, 0) : '\u2014'}</div>
       </div>
       <div class="chip">
-        <div class="chip-label">Minima</div>
+        <div class="chip-label">Mínima</div>
         <div class="chip-val">${s.rmb_low ? fmt(s.rmb_low, 0) : '\u2014'}</div>
       </div>
     </div>
@@ -580,6 +585,10 @@ function renderSGE(s, fx) {
         <span class="meta-k">USD/CNY</span>
         <span class="meta-v">${fmtUS(fx.usd_cny, 4)}</span>
       </div>
+      <div class="meta-row">
+        <span class="meta-k">Atualizado</span>
+        <span class="meta-v">${s.timestamp ? fmtTimestamp(s.timestamp) : 'Cotação com atraso'}</span>
+      </div>
     </div>`;
   flash(document.getElementById('sge-p'));
 }
@@ -588,8 +597,8 @@ function renderPremium(p) {
   const el = document.getElementById('h-pct');
   const sub = document.getElementById('h-usd');
   const note = document.getElementById('h-note');
+  const ctx = document.getElementById('h-ctx');
   const icon = document.getElementById('hero-icon');
-  const glow = document.getElementById('hero-glow');
 
   const sign = p.percent >= 0 ? '+' : '';
   const cls = p.percent > 0 ? 'pos' : p.percent < 0 ? 'neg' : 'nil';
@@ -598,19 +607,25 @@ function renderPremium(p) {
   el.textContent = sign + fmtUS(p.percent, 2) + '%';
 
   const uSign = p.usd >= 0 ? '+' : '';
-  sub.innerHTML = '<strong>' + uSign + fmtUS(p.usd, 4) + '</strong> USD por onca';
+  sub.innerHTML = '<strong>' + uSign + fmtUS(p.usd, 4) + '</strong> USD por onça';
 
   icon.classList.add('ok');
 
-  glow.className = 'hero-glow';
-  if (p.percent > 0) {
-    glow.classList.add('pos');
-    note.textContent = 'Prata em Shanghai opera com premio sobre o mercado internacional';
+  if (p.percent > 2) {
+    note.textContent = 'Prata em Shanghai opera com prêmio significativo sobre o mercado internacional';
+    ctx.textContent = 'Um prêmio elevado indica forte demanda por prata física na China, superando a oferta disponível. Isso pode sinalizar acumulação estratégica, restrições de importação, ou desconfiança no mercado de papel.';
+  } else if (p.percent > 0) {
+    note.textContent = 'Prata em Shanghai opera com prêmio sobre o mercado internacional';
+    ctx.textContent = 'Prêmio positivo indica que a demanda chinesa por prata física está acima da média global, puxando os preços domésticos para cima em relação ao spot internacional.';
+  } else if (p.percent < -2) {
+    note.textContent = 'Prata em Shanghai opera com desconto significativo sobre o mercado internacional';
+    ctx.textContent = 'Um desconto elevado pode indicar excesso de oferta doméstica, demanda industrial fraca na China, ou fluxo de exportação de prata saindo do país.';
   } else if (p.percent < 0) {
-    glow.classList.add('neg');
     note.textContent = 'Prata em Shanghai opera com desconto sobre o mercado internacional';
+    ctx.textContent = 'Desconto indica que a demanda chinesa está abaixo do preço internacional, sugerindo menor pressão compradora no mercado físico local.';
   } else {
-    note.textContent = 'Precos alinhados entre Shanghai e COMEX';
+    note.textContent = 'Preços alinhados entre Shanghai e COMEX';
+    ctx.textContent = 'Quando o prêmio está próximo de zero, o fluxo de prata física entre mercados está em equilíbrio relativo.';
   }
 
   flash(el);
@@ -628,7 +643,7 @@ function resetPremium() {
   document.getElementById('h-pct').textContent = '--%';
   document.getElementById('h-pct').className = 'hero-value nil';
   document.getElementById('h-usd').textContent = 'Aguardando dados...';
-  document.getElementById('hero-glow').className = 'hero-glow';
+  document.getElementById('h-ctx').textContent = '';
 }
 
 let last = null;
@@ -638,16 +653,16 @@ async function load() {
     const r = await fetch(API);
     const t = await r.text();
     let d;
-    try { d = JSON.parse(t); } catch { throw new Error('Resposta invalida do servidor'); }
+    try { d = JSON.parse(t); } catch { throw new Error('Resposta inválida do servidor'); }
     last = d;
 
     d.comex
       ? renderCOMEX(d.comex)
-      : showErr('comex-body', d.errors?.find(e => e.source === 'comex')?.message || 'Indisponivel');
+      : showErr('comex-body', d.errors?.find(e => e.source === 'comex')?.message || 'Indisponível');
 
     d.sge && d.fx
       ? renderSGE(d.sge, d.fx)
-      : showErr('sge-body', d.errors?.find(e => e.source === 'sge' || e.source === 'fx')?.message || 'Indisponivel');
+      : showErr('sge-body', d.errors?.find(e => e.source === 'sge' || e.source === 'fx')?.message || 'Indisponível');
 
     d.premium ? renderPremium(d.premium) : resetPremium();
 
