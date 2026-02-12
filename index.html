@@ -3,39 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silver Premium Monitor | SGE vs COMEX</title>
-  <meta name="description" content="Real-time Shanghai vs COMEX silver price premium tracker">
+  <title>Silver Premium | SGE vs COMEX</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #050508;
-      --bg-elevated: #0a0a10;
-      --bg-card: #0c0c14;
-      --bg-card-inner: #0e0e18;
-      --border: #16162a;
-      --border-light: #1e1e38;
-      --text-1: #ededf4;
-      --text-2: #9898b0;
-      --text-3: #5c5c78;
-      --text-4: #3a3a52;
-      --silver: #b8b8d0;
-      --green: #34d399;
-      --green-dim: rgba(52, 211, 153, 0.08);
-      --green-border: rgba(52, 211, 153, 0.15);
-      --red: #f87171;
-      --red-dim: rgba(248, 113, 113, 0.08);
-      --red-border: rgba(248, 113, 113, 0.15);
-      --amber: #c29553;
-      --amber-dim: rgba(194, 149, 83, 0.08);
-      --amber-border: rgba(194, 149, 83, 0.18);
-      --blue: #60a5fa;
-      --blue-dim: rgba(96, 165, 250, 0.06);
-      --glow-premium: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(52, 211, 153, 0.04) 0%, transparent 70%);
-      --glow-discount: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(248, 113, 113, 0.04) 0%, transparent 70%);
+      --bg: #07070b;
+      --surface-1: #0b0b12;
+      --surface-2: #0f0f1a;
+      --surface-3: #131321;
+      --border-1: rgba(255,255,255,0.04);
+      --border-2: rgba(255,255,255,0.07);
+      --border-3: rgba(255,255,255,0.12);
+      --text-0: #f0f0f8;
+      --text-1: #d0d0e0;
+      --text-2: #8888a4;
+      --text-3: #555570;
+      --text-4: #333348;
+      --silver-glow: #a8a8c8;
+      --green: #00e68a;
+      --green-soft: rgba(0, 230, 138, 0.12);
+      --green-border: rgba(0, 230, 138, 0.2);
+      --red: #ff6b6b;
+      --red-soft: rgba(255, 107, 107, 0.12);
+      --red-border: rgba(255, 107, 107, 0.2);
+      --amber: #dba352;
+      --amber-soft: rgba(219, 163, 82, 0.1);
+      --amber-border: rgba(219, 163, 82, 0.2);
     }
 
     html {
@@ -45,202 +42,319 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Outfit', sans-serif;
       background: var(--bg);
       color: var(--text-1);
       min-height: 100vh;
-      line-height: 1.5;
+      overflow-x: hidden;
     }
 
-    .wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* ===================== HEADER ===================== */
-    .header {
-      padding: 44px 0 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-mark {
-      width: 28px;
-      height: 28px;
-      border-radius: 7px;
-      background: linear-gradient(135deg, #3a3a5c 0%, #1a1a30 100%);
-      border: 1px solid var(--border-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--silver);
-    }
-
-    .logo-text {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-1);
-      letter-spacing: -0.01em;
-    }
-
-    .status-dot {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.6875rem;
-      color: var(--text-3);
-    }
-
-    .status-dot::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: blink 2.5s ease-in-out infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
-    /* ===================== PREMIUM HERO ===================== */
-    .premium-hero {
-      margin: 24px 0;
-      padding: 32px 0 28px;
-      text-align: center;
-      position: relative;
-      border-radius: 16px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
+    /* ============== AMBIENT BACKGROUND ============== */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
       overflow: hidden;
     }
 
-    .premium-hero::before {
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.3;
+      animation: drift 20s ease-in-out infinite;
+    }
+
+    .ambient-orb.orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(80,80,140,0.15), transparent 70%);
+      top: -10%;
+      left: -5%;
+      animation-duration: 25s;
+    }
+
+    .ambient-orb.orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0,230,138,0.06), transparent 70%);
+      bottom: -5%;
+      right: -5%;
+      animation-duration: 30s;
+      animation-delay: -8s;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+
+    /* ============== NOISE TEXTURE ============== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ============== LAYOUT ============== */
+    .page {
+      position: relative;
+      z-index: 2;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ============== HEADER ============== */
+    .header {
+      padding: 52px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--surface-3), var(--surface-1));
+      border: 1px solid var(--border-2);
+      display: grid;
+      place-items: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--silver-glow);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .brand-name {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-0);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-name span {
+      color: var(--text-3);
+      font-weight: 300;
+      margin-left: 6px;
+    }
+
+    .pulse-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.6875rem;
+      font-weight: 400;
+      color: var(--text-3);
+      letter-spacing: 0.02em;
+    }
+
+    .pulse-ring {
+      position: relative;
+      width: 8px;
+      height: 8px;
+    }
+
+    .pulse-ring::before, .pulse-ring::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: var(--glow-premium);
+      border-radius: 50%;
+    }
+
+    .pulse-ring::before {
+      background: var(--green);
+    }
+
+    .pulse-ring::after {
+      background: var(--green);
+      animation: ringPulse 2s ease-out infinite;
+    }
+
+    @keyframes ringPulse {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.8); opacity: 0; }
+    }
+
+    /* ============== PREMIUM SECTION ============== */
+    .premium-section {
+      margin: 36px 0 28px;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    .premium-card {
+      position: relative;
+      background: var(--surface-1);
+      border: 1px solid var(--border-1);
+      border-radius: 20px;
+      padding: 40px 32px 36px;
+      text-align: center;
+      overflow: hidden;
+      transition: border-color 0.5s ease;
+    }
+
+    .premium-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+
+    .premium-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 120px;
+      background: radial-gradient(ellipse at center top, rgba(0,230,138,0.04), transparent 70%);
       pointer-events: none;
       transition: background 0.6s ease;
     }
 
-    .premium-hero.is-discount::before {
-      background: var(--glow-discount);
+    .premium-card.is-discount::after {
+      background: radial-gradient(ellipse at center top, rgba(255,107,107,0.04), transparent 70%);
     }
 
-    .premium-label {
-      font-size: 0.6875rem;
+    .premium-eyebrow {
+      position: relative;
+      z-index: 1;
+      font-size: 0.625rem;
       font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.18em;
       color: var(--text-3);
-      margin-bottom: 8px;
-      position: relative;
+      margin-bottom: 14px;
     }
 
-    .premium-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 3.25rem;
-      font-weight: 600;
-      letter-spacing: -0.03em;
+    .premium-number {
+      position: relative;
+      z-index: 1;
+      font-family: 'DM Mono', monospace;
+      font-size: 4rem;
+      font-weight: 400;
+      letter-spacing: -0.04em;
       line-height: 1;
-      position: relative;
-      transition: color 0.3s ease;
+      transition: color 0.4s ease;
     }
 
-    .premium-value.positive { color: var(--green); }
-    .premium-value.negative { color: var(--red); }
-    .premium-value.neutral  { color: var(--text-3); }
+    .premium-number.positive { color: var(--green); }
+    .premium-number.negative { color: var(--red); }
+    .premium-number.neutral  { color: var(--text-4); }
 
-    .premium-sub {
-      margin-top: 8px;
-      font-family: 'JetBrains Mono', monospace;
+    .premium-usd {
+      position: relative;
+      z-index: 1;
+      margin-top: 10px;
+      font-family: 'DM Mono', monospace;
       font-size: 0.8125rem;
+      font-weight: 300;
       color: var(--text-3);
-      position: relative;
     }
 
-    .premium-sub span {
+    .premium-usd em {
+      font-style: normal;
       color: var(--text-2);
     }
 
-    .premium-desc {
-      margin-top: 12px;
-      font-size: 0.75rem;
-      color: var(--text-4);
+    .premium-note {
       position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      font-size: 0.6875rem;
+      font-weight: 300;
+      color: var(--text-4);
+      letter-spacing: 0.01em;
     }
 
-    /* ===================== CARDS GRID ===================== */
-    .grid {
+    /* ============== CARDS ============== */
+    .cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 32px;
+      gap: 14px;
+      margin-bottom: 48px;
     }
 
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      background: var(--surface-1);
+      border: 1px solid var(--border-1);
+      border-radius: 18px;
       overflow: hidden;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.28s;
     }
 
     .card:hover {
-      border-color: var(--border-light);
+      border-color: var(--border-2);
+      transform: translateY(-2px);
     }
 
-    /* --- Card Header --- */
-    .card-head {
-      padding: 18px 22px 0;
+    /* Card top accent line */
+    .card-accent {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 10%, var(--border-2) 50%, transparent 90%);
+    }
+
+    .card-top {
+      padding: 20px 24px 0;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
     }
 
-    .card-source {
-      font-size: 0.6875rem;
+    .card-exchange {
+      font-size: 0.75rem;
       font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-2);
+      color: var(--text-1);
+      letter-spacing: 0.02em;
     }
 
-    .card-pair {
+    .card-instrument {
       font-size: 0.6875rem;
-      color: var(--text-4);
+      font-weight: 300;
+      color: var(--text-3);
       margin-top: 2px;
     }
 
     .tag {
       font-size: 0.5625rem;
-      font-weight: 600;
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 3px 8px;
-      border-radius: 4px;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 100px;
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      white-space: nowrap;
     }
 
-    .tag::before {
-      content: '';
+    .tag-dot {
       width: 4px;
       height: 4px;
       border-radius: 50%;
@@ -248,507 +362,467 @@
 
     .tag-live {
       color: var(--green);
-      background: var(--green-dim);
+      background: var(--green-soft);
       border: 1px solid var(--green-border);
     }
 
-    .tag-live::before { background: var(--green); animation: blink 2s ease-in-out infinite; }
+    .tag-live .tag-dot {
+      background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
 
     .tag-delayed {
       color: var(--amber);
-      background: var(--amber-dim);
+      background: var(--amber-soft);
       border: 1px solid var(--amber-border);
     }
 
-    .tag-delayed::before { background: var(--amber); opacity: 0.7; }
+    .tag-delayed .tag-dot {
+      background: var(--amber);
+      opacity: 0.7;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.15; }
+    }
 
     /* --- Card Body --- */
     .card-body {
-      padding: 20px 22px 22px;
+      padding: 22px 24px 24px;
     }
 
-    .price-row {
+    .price-line {
       display: flex;
       align-items: baseline;
       gap: 6px;
     }
 
-    .price-big {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 2.125rem;
-      font-weight: 500;
-      letter-spacing: -0.025em;
-      color: var(--text-1);
+    .price-main {
+      font-family: 'DM Mono', monospace;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text-0);
+      letter-spacing: -0.03em;
       line-height: 1;
     }
 
-    .price-curr {
-      font-size: 0.8125rem;
-      font-weight: 400;
+    .price-sym {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
       color: var(--text-3);
     }
 
-    .price-unit {
+    .price-label {
       font-size: 0.6875rem;
+      font-weight: 300;
       color: var(--text-4);
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
-    /* --- Change badge --- */
-    .change {
+    /* Change pill */
+    .change-pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      margin-top: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 4px 10px;
-      border-radius: 6px;
+      gap: 5px;
+      margin-top: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6875rem;
+      font-weight: 400;
+      padding: 5px 12px;
+      border-radius: 100px;
     }
 
-    .change.up {
+    .change-pill.up {
       color: var(--green);
-      background: var(--green-dim);
+      background: var(--green-soft);
     }
 
-    .change.down {
+    .change-pill.down {
       color: var(--red);
-      background: var(--red-dim);
+      background: var(--red-soft);
     }
 
-    .change.flat {
+    .change-pill.flat {
       color: var(--text-3);
-      background: var(--blue-dim);
+      background: rgba(255,255,255,0.03);
     }
 
-    .change-arrow { font-size: 0.625rem; }
-
-    /* --- Metadata --- */
-    .meta {
+    /* Divider */
+    .card-divider {
       margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
+      height: 1px;
+      background: var(--border-1);
+    }
+
+    /* Meta data */
+    .card-meta {
+      margin-top: 14px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 8px;
     }
 
-    .meta-line {
+    .meta-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.6875rem;
     }
 
     .meta-k {
+      font-size: 0.6875rem;
+      font-weight: 300;
       color: var(--text-4);
     }
 
     .meta-v {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'DM Mono', monospace;
       font-size: 0.6875rem;
+      font-weight: 400;
       color: var(--text-2);
     }
 
-    /* --- Range bar (SGE) --- */
-    .range-row {
-      margin-top: 14px;
+    /* Range pills (SGE) */
+    .range-strip {
+      margin-top: 16px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 8px;
     }
 
-    .range-cell {
+    .range-chip {
+      background: var(--surface-2);
+      border: 1px solid var(--border-1);
+      border-radius: 10px;
+      padding: 10px 0;
       text-align: center;
-      padding: 8px 0;
-      background: var(--bg-card-inner);
-      border-radius: 8px;
+      transition: border-color 0.2s ease;
     }
 
-    .range-label {
+    .range-chip:hover {
+      border-color: var(--border-2);
+    }
+
+    .range-chip-label {
       font-size: 0.5625rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       color: var(--text-4);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
-    .range-val {
-      font-family: 'JetBrains Mono', monospace;
+    .range-chip-val {
+      font-family: 'DM Mono', monospace;
       font-size: 0.75rem;
       color: var(--text-2);
     }
 
-    /* ===================== LOADING / ERROR ===================== */
-    .card-loading, .card-error {
-      padding: 48px 22px;
+    /* ============== LOADING / ERROR ============== */
+    .state-loading, .state-error {
+      padding: 52px 24px;
       text-align: center;
     }
 
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--border);
+    .spin-ring {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border-2);
       border-top-color: var(--text-3);
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
-      margin: 0 auto 10px;
+      margin: 0 auto 12px;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .loading-msg {
+    .state-msg {
       font-size: 0.75rem;
+      font-weight: 300;
       color: var(--text-4);
     }
 
-    .error-msg {
+    .err-msg {
       font-size: 0.75rem;
+      font-weight: 300;
       color: var(--red);
-      margin-bottom: 10px;
-      line-height: 1.6;
+      opacity: 0.8;
+      margin-bottom: 14px;
     }
 
     .btn-retry {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Outfit', sans-serif;
       font-size: 0.6875rem;
       font-weight: 500;
       color: var(--text-2);
       background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 18px;
+      border: 1px solid var(--border-2);
+      border-radius: 100px;
+      padding: 7px 22px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
     }
 
     .btn-retry:hover {
-      color: var(--text-1);
-      border-color: var(--text-3);
+      color: var(--text-0);
+      border-color: var(--border-3);
+      background: var(--surface-2);
     }
 
-    /* --- Premium loading state --- */
-    .premium-loading .premium-value {
-      color: var(--text-4);
+    /* ============== ANIMATIONS ============== */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* ===================== FOOTER ===================== */
-    .footer {
-      padding: 20px 0 36px;
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer p {
-      font-size: 0.625rem;
-      color: var(--text-4);
-      line-height: 1.9;
-    }
-
-    /* ===================== RESPONSIVE ===================== */
+    /* ============== RESPONSIVE ============== */
     @media (max-width: 640px) {
-      .wrap { padding: 0 14px; }
-      .header { padding-top: 28px; }
-      .grid { grid-template-columns: 1fr; gap: 12px; }
-      .premium-hero { padding: 24px 16px 22px; margin: 16px 0; }
-      .premium-value { font-size: 2.5rem; }
-      .premium-sub { font-size: 0.75rem; }
-      .price-big { font-size: 1.75rem; }
-      .card-head { padding: 14px 16px 0; }
-      .card-body { padding: 16px 16px 18px; }
-      .logo-text { font-size: 0.8125rem; }
-      .range-row { gap: 6px; }
-      .range-cell { padding: 6px 0; }
+      .page { padding: 0 16px; }
+      .header { padding-top: 32px; }
+      .premium-section { margin: 24px 0 20px; }
+      .premium-card { padding: 32px 20px 28px; border-radius: 16px; }
+      .premium-number { font-size: 2.75rem; }
+      .premium-usd { font-size: 0.75rem; }
+      .cards { grid-template-columns: 1fr; gap: 12px; }
+      .card { border-radius: 14px; }
+      .price-main { font-size: 1.625rem; }
+      .card-top { padding: 16px 18px 0; }
+      .card-body { padding: 18px 18px 20px; }
+      .brand-name span { display: none; }
+
+      .ambient-orb.orb-1 { width: 300px; height: 300px; }
+      .ambient-orb.orb-2 { width: 250px; height: 250px; }
     }
 
     @media (max-width: 380px) {
-      .premium-value { font-size: 2rem; }
-      .price-big { font-size: 1.5rem; }
+      .premium-number { font-size: 2.25rem; }
+      .price-main { font-size: 1.375rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="wrap">
+<div class="ambient">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+</div>
 
-  <!-- HEADER -->
+<div class="page">
+
   <header class="header">
-    <div class="logo">
-      <div class="logo-mark">Ag</div>
-      <div class="logo-text">Silver Premium</div>
+    <div class="brand">
+      <div class="brand-icon">Ag</div>
+      <div class="brand-name">Silver Premium<span>Monitor</span></div>
     </div>
-    <div class="status-dot" id="status-text">Connecting...</div>
+    <div class="pulse-badge" id="status">
+      <div class="pulse-ring"></div>
+      <span id="status-label">Connecting</span>
+    </div>
   </header>
 
-  <!-- PREMIUM HERO -->
-  <section class="premium-hero premium-loading" id="premium-hero">
-    <div class="premium-label">Shanghai Premium over COMEX</div>
-    <div class="premium-value neutral" id="premium-pct">--</div>
-    <div class="premium-sub" id="premium-usd">Calculating...</div>
-    <div class="premium-desc" id="premium-desc">SGE Ag(T+D) vs XAG/USD spot</div>
+  <section class="premium-section">
+    <div class="premium-card" id="premium-card">
+      <div class="premium-eyebrow">Shanghai Premium over COMEX</div>
+      <div class="premium-number neutral" id="p-pct">--%</div>
+      <div class="premium-usd" id="p-usd">Loading...</div>
+      <div class="premium-note" id="p-note">SGE Ag(T+D) vs XAG/USD spot</div>
+    </div>
   </section>
 
-  <!-- PRICE CARDS -->
-  <div class="grid">
+  <div class="cards">
 
-    <!-- SGE CARD -->
     <div class="card" id="sge-card">
-      <div class="card-head">
+      <div class="card-accent"></div>
+      <div class="card-top">
         <div>
-          <div class="card-source">Shanghai SGE</div>
-          <div class="card-pair">Ag(T+D)</div>
+          <div class="card-exchange">Shanghai SGE</div>
+          <div class="card-instrument">Ag(T+D) contract</div>
         </div>
-        <div class="tag tag-delayed">Delayed</div>
+        <div class="tag tag-delayed"><span class="tag-dot"></span>Delayed</div>
       </div>
       <div id="sge-body">
-        <div class="card-loading">
-          <div class="spinner"></div>
-          <div class="loading-msg">Fetching SGE data...</div>
+        <div class="state-loading">
+          <div class="spin-ring"></div>
+          <div class="state-msg">Fetching SGE data</div>
         </div>
       </div>
     </div>
 
-    <!-- COMEX CARD -->
     <div class="card" id="comex-card">
-      <div class="card-head">
+      <div class="card-accent"></div>
+      <div class="card-top">
         <div>
-          <div class="card-source">COMEX Spot</div>
-          <div class="card-pair">XAG / USD</div>
+          <div class="card-exchange">COMEX Spot</div>
+          <div class="card-instrument">XAG / USD</div>
         </div>
-        <div class="tag tag-live">Live</div>
+        <div class="tag tag-live"><span class="tag-dot"></span>Live</div>
       </div>
       <div id="comex-body">
-        <div class="card-loading">
-          <div class="spinner"></div>
-          <div class="loading-msg">Fetching COMEX data...</div>
+        <div class="state-loading">
+          <div class="spin-ring"></div>
+          <div class="state-msg">Fetching COMEX data</div>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>
-      SGE: en.sge.com.cn delayed quotes, cached 60s&nbsp;&nbsp;|&nbsp;&nbsp;COMEX: goldprice.org live feed
-      <br>
-      FX rate: USD/CNY via open.er-api.com&nbsp;&nbsp;|&nbsp;&nbsp;Formula: RMB/kg / (32.1507 x USD/CNY)
-    </p>
-  </footer>
-
 </div>
 
 <script>
 const API = '/api/prices';
-const POLL_MS = 30 * 1000; // 30 seconds
+const POLL = 30000;
 
-// ── Helpers ──────────────────────────────────────────
-function fmt(n, decimals = 2) {
-  return n.toLocaleString('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
+function f(n, d = 2) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
-function fmtMono(n, decimals = 2) {
-  return fmt(n, decimals);
-}
+function changeDir(v) { return v > 0 ? 'up' : v < 0 ? 'down' : 'flat'; }
+function arrow(v) { return v > 0 ? '\u25B2' : v < 0 ? '\u25BC' : '\u2500'; }
 
-function fmtTime(iso) {
-  const d = new Date(iso);
-  const opts = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-  return d.toLocaleDateString('en-US', opts);
-}
-
-function changeClass(val) {
-  if (val > 0) return 'up';
-  if (val < 0) return 'down';
-  return 'flat';
-}
-
-function arrow(val) {
-  if (val > 0) return '&#9650;';
-  if (val < 0) return '&#9660;';
-  return '&#9644;';
-}
-
-// ── Render COMEX ─────────────────────────────────────
-function renderCOMEX(comex) {
-  const dir = changeClass(comex.changePercent);
+function renderCOMEX(c) {
+  const dir = changeDir(c.changePercent);
   document.getElementById('comex-body').innerHTML = `
     <div class="card-body">
-      <div class="price-row">
-        <span class="price-big">${fmtMono(comex.price, 4)}</span>
-        <span class="price-curr">USD</span>
+      <div class="price-line">
+        <span class="price-main">${f(c.price, 4)}</span>
+        <span class="price-sym">USD</span>
       </div>
-      <div class="price-unit">per troy ounce</div>
-
-      <div class="change ${dir}">
-        <span class="change-arrow">${arrow(comex.changePercent)}</span>
-        ${fmt(Math.abs(comex.change), 4)} (${fmt(Math.abs(comex.changePercent), 2)}%)
+      <div class="price-label">per troy ounce</div>
+      <div class="change-pill ${dir}">
+        ${arrow(c.changePercent)} ${f(Math.abs(c.change), 4)} (${f(Math.abs(c.changePercent), 2)}%)
       </div>
-
-      <div class="meta">
-        <div class="meta-line">
+      <div class="card-divider"></div>
+      <div class="card-meta">
+        <div class="meta-row">
           <span class="meta-k">Prev close</span>
-          <span class="meta-v">${fmtMono(comex.prevClose, 4)}</span>
+          <span class="meta-v">${f(c.prevClose, 4)}</span>
         </div>
-        <div class="meta-line">
-          <span class="meta-k">Source time</span>
-          <span class="meta-v">${comex.timestamp}</span>
+        <div class="meta-row">
+          <span class="meta-k">Updated</span>
+          <span class="meta-v">${c.timestamp}</span>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ── Render SGE ───────────────────────────────────────
-function renderSGE(sge, fx) {
+function renderSGE(s, fx) {
   document.getElementById('sge-body').innerHTML = `
     <div class="card-body">
-      <div class="price-row">
-        <span class="price-big">${fmtMono(sge.usd_per_oz, 4)}</span>
-        <span class="price-curr">USD</span>
+      <div class="price-line">
+        <span class="price-main">${f(s.usd_per_oz, 4)}</span>
+        <span class="price-sym">USD</span>
       </div>
-      <div class="price-unit">per troy ounce (converted)</div>
-
-      <div class="range-row">
-        <div class="range-cell">
-          <div class="range-label">Open</div>
-          <div class="range-val">${sge.rmb_open ? fmt(sge.rmb_open, 0) : '--'}</div>
+      <div class="price-label">per troy ounce (converted)</div>
+      <div class="range-strip">
+        <div class="range-chip">
+          <div class="range-chip-label">Open</div>
+          <div class="range-chip-val">${s.rmb_open ? f(s.rmb_open, 0) : '--'}</div>
         </div>
-        <div class="range-cell">
-          <div class="range-label">High</div>
-          <div class="range-val">${sge.rmb_high ? fmt(sge.rmb_high, 0) : '--'}</div>
+        <div class="range-chip">
+          <div class="range-chip-label">High</div>
+          <div class="range-chip-val">${s.rmb_high ? f(s.rmb_high, 0) : '--'}</div>
         </div>
-        <div class="range-cell">
-          <div class="range-label">Low</div>
-          <div class="range-val">${sge.rmb_low ? fmt(sge.rmb_low, 0) : '--'}</div>
+        <div class="range-chip">
+          <div class="range-chip-label">Low</div>
+          <div class="range-chip-val">${s.rmb_low ? f(s.rmb_low, 0) : '--'}</div>
         </div>
       </div>
-
-      <div class="meta">
-        <div class="meta-line">
+      <div class="card-divider"></div>
+      <div class="card-meta">
+        <div class="meta-row">
           <span class="meta-k">RMB/kg</span>
-          <span class="meta-v">${fmt(sge.rmb_per_kg, 0)}</span>
+          <span class="meta-v">${f(s.rmb_per_kg, 0)}</span>
         </div>
-        <div class="meta-line">
+        <div class="meta-row">
           <span class="meta-k">USD/CNY</span>
-          <span class="meta-v">${fmt(fx.usd_cny, 4)}</span>
+          <span class="meta-v">${f(fx.usd_cny, 4)}</span>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ── Render Premium ───────────────────────────────────
-function renderPremium(premium) {
-  const hero = document.getElementById('premium-hero');
-  const pctEl = document.getElementById('premium-pct');
-  const usdEl = document.getElementById('premium-usd');
-  const descEl = document.getElementById('premium-desc');
+function renderPremium(p) {
+  const card = document.getElementById('premium-card');
+  const pctEl = document.getElementById('p-pct');
+  const usdEl = document.getElementById('p-usd');
+  const noteEl = document.getElementById('p-note');
 
-  hero.classList.remove('premium-loading');
+  const sign = p.percent >= 0 ? '+' : '';
+  const cls = p.percent > 0 ? 'positive' : p.percent < 0 ? 'negative' : 'neutral';
 
-  const sign = premium.percent >= 0 ? '+' : '';
-  const pctClass = premium.percent > 0 ? 'positive' : premium.percent < 0 ? 'negative' : 'neutral';
+  pctEl.className = 'premium-number ' + cls;
+  pctEl.textContent = sign + f(p.percent, 2) + '%';
 
-  pctEl.className = 'premium-value ' + pctClass;
-  pctEl.textContent = sign + fmt(premium.percent, 2) + '%';
+  const uSign = p.usd >= 0 ? '+' : '';
+  usdEl.innerHTML = '<em>' + uSign + f(p.usd, 4) + '</em> USD/oz';
 
-  const usdSign = premium.usd >= 0 ? '+' : '';
-  usdEl.innerHTML = '<span>' + usdSign + fmt(premium.usd, 4) + ' USD/oz</span>';
-
-  if (premium.percent > 0) {
-    hero.classList.remove('is-discount');
-    descEl.textContent = 'Shanghai silver trades at a premium to international spot';
-  } else if (premium.percent < 0) {
-    hero.classList.add('is-discount');
-    descEl.textContent = 'Shanghai silver trades at a discount to international spot';
+  if (p.percent > 0) {
+    card.classList.remove('is-discount');
+    noteEl.textContent = 'Shanghai silver trades at a premium to international spot';
+  } else if (p.percent < 0) {
+    card.classList.add('is-discount');
+    noteEl.textContent = 'Shanghai silver trades at a discount to international spot';
   } else {
-    descEl.textContent = 'Shanghai and COMEX prices are aligned';
+    noteEl.textContent = 'Prices are aligned';
   }
 }
 
-// ── Render Error ─────────────────────────────────────
-function renderCardError(elementId, msg) {
-  document.getElementById(elementId).innerHTML = `
-    <div class="card-error">
-      <div class="error-msg">${msg}</div>
-      <button class="btn-retry" onclick="fetchData()">Retry</button>
-    </div>
-  `;
+function showError(id, msg) {
+  document.getElementById(id).innerHTML = `
+    <div class="state-error">
+      <div class="err-msg">${msg}</div>
+      <button class="btn-retry" onclick="load()">Retry</button>
+    </div>`;
 }
 
-function renderPremiumError() {
-  const hero = document.getElementById('premium-hero');
-  hero.classList.add('premium-loading');
-  document.getElementById('premium-pct').textContent = '--';
-  document.getElementById('premium-usd').textContent = 'Waiting for data...';
+function resetPremium() {
+  document.getElementById('p-pct').textContent = '--%';
+  document.getElementById('p-pct').className = 'premium-number neutral';
+  document.getElementById('p-usd').textContent = 'Waiting for data...';
 }
 
-// ── Main Fetch ───────────────────────────────────────
-let lastData = null;
+let last = null;
 
-async function fetchData() {
-  const statusEl = document.getElementById('status-text');
-  statusEl.textContent = 'Updating...';
-
+async function load() {
+  document.getElementById('status-label').textContent = 'Updating';
   try {
-    const res = await fetch(API);
-    const text = await res.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (parseErr) {
-      console.error('API returned non-JSON:', text.substring(0, 200));
-      throw new Error('Server returned invalid response. Retry in a moment.');
+    const r = await fetch(API);
+    const txt = await r.text();
+    let d;
+    try { d = JSON.parse(txt); } catch(e) {
+      throw new Error('Invalid server response');
     }
+    last = d;
 
-    lastData = data;
+    if (d.comex) renderCOMEX(d.comex);
+    else showError('comex-body', d.errors?.find(e=>e.source==='comex')?.message || 'Unavailable');
 
-    // Render COMEX
-    if (data.comex) {
-      renderCOMEX(data.comex);
-    } else {
-      const comexErr = data.errors?.find(e => e.source === 'comex');
-      renderCardError('comex-body', comexErr?.message || 'COMEX data unavailable');
-    }
+    if (d.sge && d.fx) renderSGE(d.sge, d.fx);
+    else showError('sge-body', d.errors?.find(e=>e.source==='sge'||e.source==='fx')?.message || 'Unavailable');
 
-    // Render SGE
-    if (data.sge && data.fx) {
-      renderSGE(data.sge, data.fx);
-    } else {
-      const sgeErr = data.errors?.find(e => e.source === 'sge' || e.source === 'fx');
-      renderCardError('sge-body', sgeErr?.message || 'SGE data unavailable');
-    }
+    if (d.premium) renderPremium(d.premium);
+    else resetPremium();
 
-    // Render Premium
-    if (data.premium) {
-      renderPremium(data.premium);
-    } else {
-      renderPremiumError();
-    }
-
-    statusEl.textContent = 'Live';
-
-  } catch (err) {
-    console.error('Fetch error:', err);
-    statusEl.textContent = 'Error';
-
-    if (!lastData) {
-      renderCardError('sge-body', err.message || 'Network error');
-      renderCardError('comex-body', err.message || 'Network error');
-      renderPremiumError();
+    document.getElementById('status-label').textContent = 'Live';
+  } catch(e) {
+    document.getElementById('status-label').textContent = 'Error';
+    if (!last) {
+      showError('sge-body', e.message);
+      showError('comex-body', e.message);
+      resetPremium();
     }
   }
 }
 
-// ── Init ─────────────────────────────────────────────
-fetchData();
-setInterval(fetchData, POLL_MS);
+load();
+setInterval(load, POLL);
 </script>
 
 </body>
