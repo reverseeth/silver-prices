@@ -511,7 +511,8 @@ function flash(el) {
 
 function updateClock() {
   const now = new Date();
-  document.getElementById('clock').textContent = now.toLocaleDateString('pt-BR', {
+  document.getElementById('clock').textContent = now.toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
     day: '2-digit', month: 'short', year: 'numeric',
     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
   });
@@ -519,10 +520,12 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-function fmtTimestamp(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+function fmtBRT(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: '2-digit', month: 'short',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
   });
 }
 
@@ -548,7 +551,7 @@ function renderCOMEX(c) {
       </div>
       <div class="meta-row">
         <span class="meta-k">Atualizado</span>
-        <span class="meta-v">${c.timestamp}</span>
+        <span class="meta-v">${fmtBRT(new Date())}</span>
       </div>
     </div>`;
   flash(document.getElementById('comex-p'));
@@ -587,7 +590,7 @@ function renderSGE(s, fx) {
       </div>
       <div class="meta-row">
         <span class="meta-k">Atualizado</span>
-        <span class="meta-v">${s.timestamp ? fmtTimestamp(s.timestamp) : 'Cotação com atraso'}</span>
+        <span class="meta-v">${s.timestamp ? fmtBRT(s.timestamp) : 'Cotação com atraso'}</span>
       </div>
     </div>`;
   flash(document.getElementById('sge-p'));
