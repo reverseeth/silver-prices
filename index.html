@@ -4,826 +4,410 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Silver Premium | SGE vs COMEX</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.min.css" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #07070b;
-      --surface-1: #0b0b12;
-      --surface-2: #0f0f1a;
-      --surface-3: #131321;
-      --border-1: rgba(255,255,255,0.04);
-      --border-2: rgba(255,255,255,0.07);
-      --border-3: rgba(255,255,255,0.12);
-      --text-0: #f0f0f8;
-      --text-1: #d0d0e0;
-      --text-2: #8888a4;
-      --text-3: #555570;
-      --text-4: #333348;
-      --silver-glow: #a8a8c8;
-      --green: #00e68a;
-      --green-soft: rgba(0, 230, 138, 0.12);
-      --green-border: rgba(0, 230, 138, 0.2);
-      --red: #ff6b6b;
-      --red-soft: rgba(255, 107, 107, 0.12);
-      --red-border: rgba(255, 107, 107, 0.2);
-      --amber: #dba352;
-      --amber-soft: rgba(219, 163, 82, 0.1);
-      --amber-border: rgba(219, 163, 82, 0.2);
+      --black: #000000;
+      --g1: #0a0a0a;
+      --g2: #111111;
+      --g3: #171717;
+      --g4: #1c1c1c;
+      --g5: #222222;
+      --g6: #2e2e2e;
+      --g7: #3a3a3a;
+      --g8: #505050;
+      --g9: #6e6e6e;
+      --g10: #8f8f8f;
+      --g11: #b0b0b0;
+      --g12: #e0e0e0;
+      --white: #fafafa;
+      --green: #00cc88;
+      --green-m: rgba(0,204,136,0.1);
+      --red: #ef4444;
+      --red-m: rgba(239,68,68,0.1);
+      --amber: #ca8a04;
     }
 
-    html {
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
 
     body {
-      font-family: 'Outfit', sans-serif;
-      background: var(--bg);
-      color: var(--text-1);
+      font-family: 'Geist', -apple-system, system-ui, sans-serif;
+      background: var(--black);
+      color: var(--g12);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ============== AMBIENT BACKGROUND ============== */
-    .ambient {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
+    .page { max-width: 840px; margin: 0 auto; padding: 0 24px 64px; }
 
-    .ambient-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.3;
-      animation: drift 20s ease-in-out infinite;
-    }
-
-    .ambient-orb.orb-1 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(80,80,140,0.15), transparent 70%);
-      top: -10%;
-      left: -5%;
-      animation-duration: 25s;
-    }
-
-    .ambient-orb.orb-2 {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(0,230,138,0.06), transparent 70%);
-      bottom: -5%;
-      right: -5%;
-      animation-duration: 30s;
-      animation-delay: -8s;
-    }
-
-    @keyframes drift {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -20px) scale(1.05); }
-      66% { transform: translate(-20px, 15px) scale(0.95); }
-    }
-
-    /* ============== NOISE TEXTURE ============== */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 256px 256px;
-    }
-
-    /* ============== LAYOUT ============== */
-    .page {
-      position: relative;
-      z-index: 2;
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ============== HEADER ============== */
+    /* HEADER */
     .header {
-      padding: 52px 0 0;
+      padding: 48px 0 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      animation: fadeUp 0.8s ease both;
+      opacity: 0; animation: up .6s ease forwards;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .wordmark { display: flex; align-items: center; gap: 10px; }
+
+    .wordmark svg { width: 20px; height: 20px; color: var(--g10); }
+
+    .wm-text { font-size: .8125rem; font-weight: 500; color: var(--white); letter-spacing: -.01em; }
+
+    .live-ind { display: flex; align-items: center; gap: 8px; font-size: .6875rem; color: var(--g9); }
+
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); position: relative; }
+
+    .live-dot::after {
+      content: ''; position: absolute; inset: -3px; border-radius: 50%;
+      border: 1px solid var(--green); opacity: 0;
+      animation: ping 2.5s cubic-bezier(0,0,.2,1) infinite;
     }
 
-    .brand-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: linear-gradient(145deg, var(--surface-3), var(--surface-1));
-      border: 1px solid var(--border-2);
-      display: grid;
-      place-items: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--silver-glow);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+    @keyframes ping { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(2.2);opacity:0} }
+
+    .sep { height: 1px; background: var(--g3); margin: 24px 0; opacity:0; animation: up .6s ease .05s forwards; }
+
+    /* PREMIUM */
+    .prem {
+      padding: 40px 0 44px; text-align: center;
+      opacity: 0; animation: up .6s ease .1s forwards;
     }
 
-    .brand-name {
-      font-size: 0.9375rem;
-      font-weight: 500;
-      color: var(--text-0);
-      letter-spacing: -0.01em;
+    .prem-ico {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--g2); border: 1px solid var(--g4);
+      margin-bottom: 20px; color: var(--g10);
+      transition: border-color .4s;
     }
 
-    .brand-name span {
-      color: var(--text-3);
-      font-weight: 300;
-      margin-left: 6px;
+    .prem-ico svg { width: 18px; height: 18px; }
+    .prem-ico.ok { border-color: var(--g5); }
+
+    .prem-ey {
+      font-size: .6875rem; font-weight: 400; color: var(--g8);
+      letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px;
     }
 
-    .pulse-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.6875rem;
-      font-weight: 400;
-      color: var(--text-3);
-      letter-spacing: 0.02em;
+    .prem-n {
+      font-family: 'Geist Mono', monospace; font-size: 3.5rem; font-weight: 500;
+      letter-spacing: -.04em; line-height: 1; transition: color .4s;
     }
 
-    .pulse-ring {
-      position: relative;
-      width: 8px;
-      height: 8px;
+    .prem-n.pos { color: var(--green); }
+    .prem-n.neg { color: var(--red); }
+    .prem-n.nil { color: var(--g6); }
+
+    .prem-d {
+      margin-top: 12px; font-family: 'Geist Mono', monospace;
+      font-size: .8125rem; color: var(--g7);
     }
 
-    .pulse-ring::before, .pulse-ring::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
+    .prem-d em { font-style: normal; color: var(--g10); }
+
+    .prem-c { margin-top: 20px; font-size: .75rem; color: var(--g7); }
+
+    /* GRID */
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: var(--g3); border: 1px solid var(--g3); border-radius: 16px;
+      overflow: hidden; opacity: 0; animation: up .6s ease .18s forwards;
     }
 
-    .pulse-ring::before {
-      background: var(--green);
+    .card { background: var(--g1); transition: background .3s; }
+    .card:hover { background: var(--g2); }
+
+    .card-in { padding: 28px 28px 30px; }
+
+    .card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+
+    .card-lb { display: flex; align-items: center; gap: 10px; }
+
+    .card-ic {
+      width: 32px; height: 32px; border-radius: 9px;
+      background: var(--g3); border: 1px solid var(--g4);
+      display: grid; place-items: center; color: var(--g10);
+      flex-shrink: 0; transition: border-color .3s;
     }
 
-    .pulse-ring::after {
-      background: var(--green);
-      animation: ringPulse 2s ease-out infinite;
+    .card:hover .card-ic { border-color: var(--g5); }
+    .card-ic svg { width: 15px; height: 15px; }
+
+    .card-nm { font-size: .8125rem; font-weight: 500; color: var(--g12); letter-spacing: -.01em; }
+    .card-sb { font-size: .6875rem; color: var(--g8); margin-top: 1px; }
+
+    .bg {
+      font-size: .5625rem; font-weight: 500; text-transform: uppercase;
+      letter-spacing: .05em; padding: 4px 8px 3px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 5px;
     }
 
-    @keyframes ringPulse {
-      0% { transform: scale(1); opacity: 0.6; }
-      100% { transform: scale(2.8); opacity: 0; }
+    .bg-d { width: 4px; height: 4px; border-radius: 50%; }
+
+    .bg-live { color: var(--green); background: var(--green-m); }
+    .bg-live .bg-d { background: var(--green); animation: bk 2s ease-in-out infinite; }
+
+    .bg-del { color: var(--amber); background: rgba(202,138,4,.08); }
+    .bg-del .bg-d { background: var(--amber); opacity: .6; }
+
+    @keyframes bk { 0%,100%{opacity:1} 50%{opacity:.1} }
+
+    /* Price */
+    .pr { display: flex; align-items: baseline; gap: 7px; }
+
+    .pv {
+      font-family: 'Geist Mono', monospace; font-size: 1.875rem; font-weight: 500;
+      color: var(--white); letter-spacing: -.035em; line-height: 1;
     }
 
-    /* ============== PREMIUM SECTION ============== */
-    .premium-section {
-      margin: 36px 0 28px;
-      animation: fadeUp 0.8s ease 0.1s both;
+    .pu { font-size: .6875rem; color: var(--g7); }
+    .pd { margin-top: 6px; font-size: .6875rem; color: var(--g7); }
+
+    /* Pill */
+    .pl {
+      display: inline-flex; align-items: center; gap: 4px; margin-top: 16px;
+      font-family: 'Geist Mono', monospace; font-size: .6875rem; font-weight: 500;
+      padding: 5px 10px; border-radius: 8px; line-height: 1;
     }
 
-    .premium-card {
-      position: relative;
-      background: var(--surface-1);
-      border: 1px solid var(--border-1);
-      border-radius: 20px;
-      padding: 40px 32px 36px;
-      text-align: center;
-      overflow: hidden;
-      transition: border-color 0.5s ease;
+    .pl.up { color: var(--green); background: var(--green-m); }
+    .pl.dn { color: var(--red); background: var(--red-m); }
+    .pl.fl { color: var(--g8); background: var(--g3); }
+
+    .pl-a { font-size: .5rem; }
+
+    /* Sep & Meta */
+    .cs { height: 1px; background: var(--g3); margin: 20px 0 16px; }
+
+    .mt { display: flex; flex-direction: column; gap: 9px; }
+
+    .mi { display: flex; justify-content: space-between; align-items: center; }
+
+    .mk { font-size: .6875rem; color: var(--g7); }
+
+    .mv { font-family: 'Geist Mono', monospace; font-size: .6875rem; color: var(--g10); }
+
+    /* Ranges */
+    .rg { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 18px; }
+
+    .rb {
+      background: var(--g2); border: 1px solid var(--g3); border-radius: 8px;
+      padding: 10px 8px; text-align: center; transition: border-color .2s;
     }
 
-    .premium-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 200px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    .rb:hover { border-color: var(--g5); }
+
+    .rb-l { font-size: .5625rem; text-transform: uppercase; letter-spacing: .06em; color: var(--g7); margin-bottom: 4px; }
+
+    .rb-v { font-family: 'Geist Mono', monospace; font-size: .75rem; color: var(--g11); }
+
+    /* States */
+    .sl, .se { padding: 52px 0; text-align: center; }
+
+    .ld {
+      width: 20px; height: 20px; border: 1.5px solid var(--g4);
+      border-top-color: var(--g8); border-radius: 50%;
+      margin: 0 auto 12px; animation: sp .65s linear infinite;
     }
 
-    .premium-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60%;
-      height: 120px;
-      background: radial-gradient(ellipse at center top, rgba(0,230,138,0.04), transparent 70%);
-      pointer-events: none;
-      transition: background 0.6s ease;
+    @keyframes sp { to { transform: rotate(360deg); } }
+
+    .st { font-size: .75rem; color: var(--g7); }
+
+    .er { font-size: .75rem; color: var(--red); opacity: .7; margin-bottom: 14px; }
+
+    .bt {
+      font-family: 'Geist', sans-serif; font-size: .6875rem; font-weight: 500;
+      color: var(--g11); background: var(--g3); border: 1px solid var(--g4);
+      border-radius: 8px; padding: 7px 20px; cursor: pointer; transition: all .15s;
     }
 
-    .premium-card.is-discount::after {
-      background: radial-gradient(ellipse at center top, rgba(255,107,107,0.04), transparent 70%);
+    .bt:hover { background: var(--g4); border-color: var(--g5); color: var(--white); }
+
+    /* Footer */
+    .fo {
+      margin-top: 32px; text-align: center;
+      opacity: 0; animation: up .6s ease .26s forwards;
     }
 
-    .premium-eyebrow {
-      position: relative;
-      z-index: 1;
-      font-size: 0.625rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-3);
-      margin-bottom: 14px;
-    }
+    .fo p { font-size: .625rem; color: var(--g6); line-height: 1.7; }
 
-    .premium-number {
-      position: relative;
-      z-index: 1;
-      font-family: 'DM Mono', monospace;
-      font-size: 4rem;
-      font-weight: 400;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      transition: color 0.4s ease;
-    }
+    /* Anim */
+    @keyframes up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
-    .premium-number.positive { color: var(--green); }
-    .premium-number.negative { color: var(--red); }
-    .premium-number.neutral  { color: var(--text-4); }
+    .fl { animation: nf .5s ease; }
+    @keyframes nf { 0%{opacity:.4} 100%{opacity:1} }
 
-    .premium-usd {
-      position: relative;
-      z-index: 1;
-      margin-top: 10px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8125rem;
-      font-weight: 300;
-      color: var(--text-3);
-    }
-
-    .premium-usd em {
-      font-style: normal;
-      color: var(--text-2);
-    }
-
-    .premium-note {
-      position: relative;
-      z-index: 1;
-      margin-top: 16px;
-      font-size: 0.6875rem;
-      font-weight: 300;
-      color: var(--text-4);
-      letter-spacing: 0.01em;
-    }
-
-    /* ============== CARDS ============== */
-    .cards {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 48px;
-    }
-
-    .card {
-      background: var(--surface-1);
-      border: 1px solid var(--border-1);
-      border-radius: 18px;
-      overflow: hidden;
-      transition: border-color 0.3s ease, transform 0.3s ease;
-      animation: fadeUp 0.8s ease 0.2s both;
-    }
-
-    .card:nth-child(2) {
-      animation-delay: 0.28s;
-    }
-
-    .card:hover {
-      border-color: var(--border-2);
-      transform: translateY(-2px);
-    }
-
-    /* Card top accent line */
-    .card-accent {
-      height: 1px;
-      background: linear-gradient(90deg, transparent 10%, var(--border-2) 50%, transparent 90%);
-    }
-
-    .card-top {
-      padding: 20px 24px 0;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-    }
-
-    .card-exchange {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--text-1);
-      letter-spacing: 0.02em;
-    }
-
-    .card-instrument {
-      font-size: 0.6875rem;
-      font-weight: 300;
-      color: var(--text-3);
-      margin-top: 2px;
-    }
-
-    .tag {
-      font-size: 0.5625rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 4px 10px;
-      border-radius: 100px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .tag-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-    }
-
-    .tag-live {
-      color: var(--green);
-      background: var(--green-soft);
-      border: 1px solid var(--green-border);
-    }
-
-    .tag-live .tag-dot {
-      background: var(--green);
-      animation: blink 2s ease-in-out infinite;
-    }
-
-    .tag-delayed {
-      color: var(--amber);
-      background: var(--amber-soft);
-      border: 1px solid var(--amber-border);
-    }
-
-    .tag-delayed .tag-dot {
-      background: var(--amber);
-      opacity: 0.7;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.15; }
-    }
-
-    /* --- Card Body --- */
-    .card-body {
-      padding: 22px 24px 24px;
-    }
-
-    .price-line {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .price-main {
-      font-family: 'DM Mono', monospace;
-      font-size: 2rem;
-      font-weight: 400;
-      color: var(--text-0);
-      letter-spacing: -0.03em;
-      line-height: 1;
-    }
-
-    .price-sym {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: var(--text-3);
-    }
-
-    .price-label {
-      font-size: 0.6875rem;
-      font-weight: 300;
-      color: var(--text-4);
-      margin-top: 5px;
-    }
-
-    /* Change pill */
-    .change-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 14px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6875rem;
-      font-weight: 400;
-      padding: 5px 12px;
-      border-radius: 100px;
-    }
-
-    .change-pill.up {
-      color: var(--green);
-      background: var(--green-soft);
-    }
-
-    .change-pill.down {
-      color: var(--red);
-      background: var(--red-soft);
-    }
-
-    .change-pill.flat {
-      color: var(--text-3);
-      background: rgba(255,255,255,0.03);
-    }
-
-    /* Divider */
-    .card-divider {
-      margin-top: 18px;
-      height: 1px;
-      background: var(--border-1);
-    }
-
-    /* Meta data */
-    .card-meta {
-      margin-top: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .meta-k {
-      font-size: 0.6875rem;
-      font-weight: 300;
-      color: var(--text-4);
-    }
-
-    .meta-v {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.6875rem;
-      font-weight: 400;
-      color: var(--text-2);
-    }
-
-    /* Range pills (SGE) */
-    .range-strip {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
-
-    .range-chip {
-      background: var(--surface-2);
-      border: 1px solid var(--border-1);
-      border-radius: 10px;
-      padding: 10px 0;
-      text-align: center;
-      transition: border-color 0.2s ease;
-    }
-
-    .range-chip:hover {
-      border-color: var(--border-2);
-    }
-
-    .range-chip-label {
-      font-size: 0.5625rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-4);
-      margin-bottom: 3px;
-    }
-
-    .range-chip-val {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      color: var(--text-2);
-    }
-
-    /* ============== LOADING / ERROR ============== */
-    .state-loading, .state-error {
-      padding: 52px 24px;
-      text-align: center;
-    }
-
-    .spin-ring {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--border-2);
-      border-top-color: var(--text-3);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto 12px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .state-msg {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: var(--text-4);
-    }
-
-    .err-msg {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: var(--red);
-      opacity: 0.8;
-      margin-bottom: 14px;
-    }
-
-    .btn-retry {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.6875rem;
-      font-weight: 500;
-      color: var(--text-2);
-      background: transparent;
-      border: 1px solid var(--border-2);
-      border-radius: 100px;
-      padding: 7px 22px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-retry:hover {
-      color: var(--text-0);
-      border-color: var(--border-3);
-      background: var(--surface-2);
-    }
-
-    /* ============== ANIMATIONS ============== */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ============== RESPONSIVE ============== */
-    @media (max-width: 640px) {
-      .page { padding: 0 16px; }
+    /* Responsive */
+    @media(max-width:640px) {
+      .page { padding: 0 16px 48px; }
       .header { padding-top: 32px; }
-      .premium-section { margin: 24px 0 20px; }
-      .premium-card { padding: 32px 20px 28px; border-radius: 16px; }
-      .premium-number { font-size: 2.75rem; }
-      .premium-usd { font-size: 0.75rem; }
-      .cards { grid-template-columns: 1fr; gap: 12px; }
-      .card { border-radius: 14px; }
-      .price-main { font-size: 1.625rem; }
-      .card-top { padding: 16px 18px 0; }
-      .card-body { padding: 18px 18px 20px; }
-      .brand-name span { display: none; }
-
-      .ambient-orb.orb-1 { width: 300px; height: 300px; }
-      .ambient-orb.orb-2 { width: 250px; height: 250px; }
+      .prem { padding: 28px 0 32px; }
+      .prem-n { font-size: 2.5rem; }
+      .prem-d { font-size: .75rem; }
+      .grid { grid-template-columns: 1fr; border-radius: 14px; }
+      .card-in { padding: 22px 20px 24px; }
+      .pv { font-size: 1.5rem; }
+      .card-ic { width: 28px; height: 28px; border-radius: 8px; }
+      .card-ic svg { width: 13px; height: 13px; }
+      .prem-ico { width: 36px; height: 36px; border-radius: 10px; }
+      .prem-ico svg { width: 16px; height: 16px; }
+      .rg { gap: 4px; }
+      .rb { padding: 8px 6px; border-radius: 6px; }
+      .wm-text { font-size: .75rem; }
     }
 
-    @media (max-width: 380px) {
-      .premium-number { font-size: 2.25rem; }
-      .price-main { font-size: 1.375rem; }
+    @media(max-width:380px) {
+      .prem-n { font-size: 2rem; }
+      .pv { font-size: 1.25rem; }
+      .card-in { padding: 18px 16px 20px; }
     }
   </style>
 </head>
 <body>
 
-<div class="ambient">
-  <div class="ambient-orb orb-1"></div>
-  <div class="ambient-orb orb-2"></div>
-</div>
-
 <div class="page">
 
   <header class="header">
-    <div class="brand">
-      <div class="brand-icon">Ag</div>
-      <div class="brand-name">Silver Premium<span>Monitor</span></div>
+    <div class="wordmark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 9.5c0-1.38 1.79-2.5 4-2.5s4 1.12 4 2.5-1.79 2.5-4 2.5-4 1.12-4 2.5 1.79 2.5 4 2.5"/></svg>
+      <span class="wm-text">Silver Premium</span>
     </div>
-    <div class="pulse-badge" id="status">
-      <div class="pulse-ring"></div>
-      <span id="status-label">Connecting</span>
+    <div class="live-ind" id="status">
+      <div class="live-dot"></div>
+      <span id="sl">Connecting</span>
     </div>
   </header>
 
-  <section class="premium-section">
-    <div class="premium-card" id="premium-card">
-      <div class="premium-eyebrow">Shanghai Premium over COMEX</div>
-      <div class="premium-number neutral" id="p-pct">--%</div>
-      <div class="premium-usd" id="p-usd">Loading...</div>
-      <div class="premium-note" id="p-note">SGE Ag(T+D) vs XAG/USD spot</div>
+  <div class="sep"></div>
+
+  <section class="prem">
+    <div class="prem-ico" id="pi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7l7-4 7 4"/><path d="M5 7l-1 6c0 1.66 1.34 2 2 2h0c.66 0 2-.34 2-2L7 7"/><path d="M17 7l-1 6c0 1.66 1.34 2 2 2h0c.66 0 2-.34 2-2l-1-6"/></svg>
     </div>
+    <div class="prem-ey">Shanghai Premium</div>
+    <div class="prem-n nil" id="pp">--%</div>
+    <div class="prem-d" id="pu">Loading</div>
+    <div class="prem-c" id="pc">SGE Ag(T+D) minus COMEX XAG/USD</div>
   </section>
 
-  <div class="cards">
+  <div class="sep"></div>
 
-    <div class="card" id="sge-card">
-      <div class="card-accent"></div>
-      <div class="card-top">
-        <div>
-          <div class="card-exchange">Shanghai SGE</div>
-          <div class="card-instrument">Ag(T+D) contract</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-in">
+        <div class="card-hd">
+          <div class="card-lb">
+            <div class="card-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><path d="M9 13h6"/><path d="M9 9h6"/></svg>
+            </div>
+            <div><div class="card-nm">Shanghai SGE</div><div class="card-sb">Ag(T+D)</div></div>
+          </div>
+          <div class="bg bg-del"><span class="bg-d"></span>Delayed</div>
         </div>
-        <div class="tag tag-delayed"><span class="tag-dot"></span>Delayed</div>
-      </div>
-      <div id="sge-body">
-        <div class="state-loading">
-          <div class="spin-ring"></div>
-          <div class="state-msg">Fetching SGE data</div>
+        <div id="sb">
+          <div class="sl"><div class="ld"></div><div class="st">Fetching SGE</div></div>
         </div>
       </div>
     </div>
-
-    <div class="card" id="comex-card">
-      <div class="card-accent"></div>
-      <div class="card-top">
-        <div>
-          <div class="card-exchange">COMEX Spot</div>
-          <div class="card-instrument">XAG / USD</div>
+    <div class="card">
+      <div class="card-in">
+        <div class="card-hd">
+          <div class="card-lb">
+            <div class="card-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16l4-6 4 4 4-8"/></svg>
+            </div>
+            <div><div class="card-nm">COMEX</div><div class="card-sb">XAG / USD</div></div>
+          </div>
+          <div class="bg bg-live"><span class="bg-d"></span>Live</div>
         </div>
-        <div class="tag tag-live"><span class="tag-dot"></span>Live</div>
-      </div>
-      <div id="comex-body">
-        <div class="state-loading">
-          <div class="spin-ring"></div>
-          <div class="state-msg">Fetching COMEX data</div>
+        <div id="cb">
+          <div class="sl"><div class="ld"></div><div class="st">Fetching COMEX</div></div>
         </div>
       </div>
     </div>
-
   </div>
+
+  <div class="fo"><p>Data refreshes every 30 seconds. SGE quotes are delayed. FX rate: USD/CNY.</p></div>
 
 </div>
 
 <script>
-const API = '/api/prices';
-const POLL = 30000;
+const API='/api/prices',POLL=30000;
+const f=(n,d=2)=>n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const dr=v=>v>0?'up':v<0?'dn':'fl';
+const ar=v=>v>0?'\u25B2':v<0?'\u25BC':'\u2014';
+function fl(e){if(!e)return;e.classList.remove('fl');void e.offsetWidth;e.classList.add('fl')}
 
-function f(n, d = 2) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
-}
-
-function changeDir(v) { return v > 0 ? 'up' : v < 0 ? 'down' : 'flat'; }
-function arrow(v) { return v > 0 ? '\u25B2' : v < 0 ? '\u25BC' : '\u2500'; }
-
-function renderCOMEX(c) {
-  const dir = changeDir(c.changePercent);
-  document.getElementById('comex-body').innerHTML = `
-    <div class="card-body">
-      <div class="price-line">
-        <span class="price-main">${f(c.price, 4)}</span>
-        <span class="price-sym">USD</span>
-      </div>
-      <div class="price-label">per troy ounce</div>
-      <div class="change-pill ${dir}">
-        ${arrow(c.changePercent)} ${f(Math.abs(c.change), 4)} (${f(Math.abs(c.changePercent), 2)}%)
-      </div>
-      <div class="card-divider"></div>
-      <div class="card-meta">
-        <div class="meta-row">
-          <span class="meta-k">Prev close</span>
-          <span class="meta-v">${f(c.prevClose, 4)}</span>
-        </div>
-        <div class="meta-row">
-          <span class="meta-k">Updated</span>
-          <span class="meta-v">${c.timestamp}</span>
-        </div>
-      </div>
+function rC(c){
+  const d=dr(c.changePercent);
+  document.getElementById('cb').innerHTML=`
+    <div class="pr"><span class="pv" id="cv">${f(c.price,4)}</span><span class="pu">USD/oz</span></div>
+    <div class="pd">per troy ounce</div>
+    <div class="pl ${d}"><span class="pl-a">${ar(c.changePercent)}</span>${f(Math.abs(c.change),4)}&nbsp;&nbsp;${f(Math.abs(c.changePercent),2)}%</div>
+    <div class="cs"></div>
+    <div class="mt">
+      <div class="mi"><span class="mk">Prev close</span><span class="mv">${f(c.prevClose,4)}</span></div>
+      <div class="mi"><span class="mk">Updated</span><span class="mv">${c.timestamp}</span></div>
     </div>`;
+  fl(document.getElementById('cv'));
 }
 
-function renderSGE(s, fx) {
-  document.getElementById('sge-body').innerHTML = `
-    <div class="card-body">
-      <div class="price-line">
-        <span class="price-main">${f(s.usd_per_oz, 4)}</span>
-        <span class="price-sym">USD</span>
-      </div>
-      <div class="price-label">per troy ounce (converted)</div>
-      <div class="range-strip">
-        <div class="range-chip">
-          <div class="range-chip-label">Open</div>
-          <div class="range-chip-val">${s.rmb_open ? f(s.rmb_open, 0) : '--'}</div>
-        </div>
-        <div class="range-chip">
-          <div class="range-chip-label">High</div>
-          <div class="range-chip-val">${s.rmb_high ? f(s.rmb_high, 0) : '--'}</div>
-        </div>
-        <div class="range-chip">
-          <div class="range-chip-label">Low</div>
-          <div class="range-chip-val">${s.rmb_low ? f(s.rmb_low, 0) : '--'}</div>
-        </div>
-      </div>
-      <div class="card-divider"></div>
-      <div class="card-meta">
-        <div class="meta-row">
-          <span class="meta-k">RMB/kg</span>
-          <span class="meta-v">${f(s.rmb_per_kg, 0)}</span>
-        </div>
-        <div class="meta-row">
-          <span class="meta-k">USD/CNY</span>
-          <span class="meta-v">${f(fx.usd_cny, 4)}</span>
-        </div>
-      </div>
+function rS(s,fx){
+  document.getElementById('sb').innerHTML=`
+    <div class="pr"><span class="pv" id="sv">${f(s.usd_per_oz,4)}</span><span class="pu">USD/oz</span></div>
+    <div class="pd">converted from ${f(s.rmb_per_kg,0)} RMB/kg</div>
+    <div class="rg">
+      <div class="rb"><div class="rb-l">Open</div><div class="rb-v">${s.rmb_open?f(s.rmb_open,0):'\u2014'}</div></div>
+      <div class="rb"><div class="rb-l">High</div><div class="rb-v">${s.rmb_high?f(s.rmb_high,0):'\u2014'}</div></div>
+      <div class="rb"><div class="rb-l">Low</div><div class="rb-v">${s.rmb_low?f(s.rmb_low,0):'\u2014'}</div></div>
+    </div>
+    <div class="cs"></div>
+    <div class="mt">
+      <div class="mi"><span class="mk">RMB/kg</span><span class="mv">${f(s.rmb_per_kg,0)}</span></div>
+      <div class="mi"><span class="mk">USD/CNY</span><span class="mv">${f(fx.usd_cny,4)}</span></div>
     </div>`;
+  fl(document.getElementById('sv'));
 }
 
-function renderPremium(p) {
-  const card = document.getElementById('premium-card');
-  const pctEl = document.getElementById('p-pct');
-  const usdEl = document.getElementById('p-usd');
-  const noteEl = document.getElementById('p-note');
+function rP(p){
+  const e=document.getElementById('pp'),u=document.getElementById('pu'),c=document.getElementById('pc'),i=document.getElementById('pi');
+  const s=p.percent>=0?'+':'';
+  e.className='prem-n '+(p.percent>0?'pos':p.percent<0?'neg':'nil');
+  e.textContent=s+f(p.percent,2)+'%';
+  const us=p.usd>=0?'+':'';
+  u.innerHTML='<em>'+us+f(p.usd,4)+'</em> USD per ounce';
+  i.classList.add('ok');
+  c.textContent=p.percent>0?'Shanghai silver trades at a premium to international spot':p.percent<0?'Shanghai silver trades at a discount to international spot':'Prices are aligned';
+  fl(e);
+}
 
-  const sign = p.percent >= 0 ? '+' : '';
-  const cls = p.percent > 0 ? 'positive' : p.percent < 0 ? 'negative' : 'neutral';
+function sE(id,m){document.getElementById(id).innerHTML=`<div class="se"><div class="er">${m}</div><button class="bt" onclick="ld()">Retry</button></div>`}
+function rR(){document.getElementById('pp').textContent='--%';document.getElementById('pp').className='prem-n nil';document.getElementById('pu').textContent='Waiting for data'}
 
-  pctEl.className = 'premium-number ' + cls;
-  pctEl.textContent = sign + f(p.percent, 2) + '%';
-
-  const uSign = p.usd >= 0 ? '+' : '';
-  usdEl.innerHTML = '<em>' + uSign + f(p.usd, 4) + '</em> USD/oz';
-
-  if (p.percent > 0) {
-    card.classList.remove('is-discount');
-    noteEl.textContent = 'Shanghai silver trades at a premium to international spot';
-  } else if (p.percent < 0) {
-    card.classList.add('is-discount');
-    noteEl.textContent = 'Shanghai silver trades at a discount to international spot';
-  } else {
-    noteEl.textContent = 'Prices are aligned';
+let L=null;
+async function ld(){
+  document.getElementById('sl').textContent='Updating';
+  try{
+    const r=await fetch(API),t=await r.text();
+    let d;try{d=JSON.parse(t)}catch{throw new Error('Invalid response')}
+    L=d;
+    d.comex?rC(d.comex):sE('cb',d.errors?.find(e=>e.source==='comex')?.message||'Unavailable');
+    d.sge&&d.fx?rS(d.sge,d.fx):sE('sb',d.errors?.find(e=>e.source==='sge'||e.source==='fx')?.message||'Unavailable');
+    d.premium?rP(d.premium):rR();
+    document.getElementById('sl').textContent='Live';
+  }catch(e){
+    document.getElementById('sl').textContent='Offline';
+    if(!L){sE('sb',e.message);sE('cb',e.message);rR()}
   }
 }
-
-function showError(id, msg) {
-  document.getElementById(id).innerHTML = `
-    <div class="state-error">
-      <div class="err-msg">${msg}</div>
-      <button class="btn-retry" onclick="load()">Retry</button>
-    </div>`;
-}
-
-function resetPremium() {
-  document.getElementById('p-pct').textContent = '--%';
-  document.getElementById('p-pct').className = 'premium-number neutral';
-  document.getElementById('p-usd').textContent = 'Waiting for data...';
-}
-
-let last = null;
-
-async function load() {
-  document.getElementById('status-label').textContent = 'Updating';
-  try {
-    const r = await fetch(API);
-    const txt = await r.text();
-    let d;
-    try { d = JSON.parse(txt); } catch(e) {
-      throw new Error('Invalid server response');
-    }
-    last = d;
-
-    if (d.comex) renderCOMEX(d.comex);
-    else showError('comex-body', d.errors?.find(e=>e.source==='comex')?.message || 'Unavailable');
-
-    if (d.sge && d.fx) renderSGE(d.sge, d.fx);
-    else showError('sge-body', d.errors?.find(e=>e.source==='sge'||e.source==='fx')?.message || 'Unavailable');
-
-    if (d.premium) renderPremium(d.premium);
-    else resetPremium();
-
-    document.getElementById('status-label').textContent = 'Live';
-  } catch(e) {
-    document.getElementById('status-label').textContent = 'Error';
-    if (!last) {
-      showError('sge-body', e.message);
-      showError('comex-body', e.message);
-      resetPremium();
-    }
-  }
-}
-
-load();
-setInterval(load, POLL);
+ld();setInterval(ld,POLL);
 </script>
-
 </body>
 </html>
