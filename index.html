@@ -1,320 +1,422 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silver Premium | SGE vs COMEX</title>
+  <title>Silver Premium | Shanghai vs COMEX</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --black: #000000;
-      --g1: #0a0a0a;
-      --g2: #111111;
-      --g3: #191919;
-      --g4: #222222;
-      --g5: #2a2a2a;
-      --g6: #444444;
-      --g7: #666666;
-      --g8: #888888;
-      --g9: #aaaaaa;
-      --g10: #cccccc;
-      --g11: #e0e0e0;
+      --g1: #080808;
+      --g2: #0e0e0e;
+      --g3: #161616;
+      --g4: #1e1e1e;
+      --g5: #282828;
+      --g6: #555555;
+      --g7: #777777;
+      --g8: #999999;
+      --g9: #bbbbbb;
+      --g10: #d4d4d4;
+      --g11: #eaeaea;
       --white: #f5f5f5;
-      --green: #00cc88;
-      --green-m: rgba(0,204,136,0.1);
+      --green: #22c55e;
+      --green-soft: rgba(34,197,94,0.07);
+      --green-glow: rgba(34,197,94,0.14);
       --red: #ef4444;
-      --red-m: rgba(239,68,68,0.1);
-      --amber: #d4a020;
-      --amber-m: rgba(212,160,32,0.1);
+      --red-soft: rgba(239,68,68,0.07);
+      --red-glow: rgba(239,68,68,0.14);
+      --amber: #eab308;
+      --amber-soft: rgba(234,179,8,0.07);
+      --amber-glow: rgba(234,179,8,0.14);
     }
 
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
     body {
-      font-family: 'Helvetica Neue', 'Helvetica', -apple-system, system-ui, sans-serif;
+      font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-variant-numeric: tabular-nums;
       background: var(--black);
-      color: var(--g11);
+      color: var(--g10);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    .page { max-width: 860px; margin: 0 auto; padding: 0 24px 60px; }
+    .page { max-width: 880px; margin: 0 auto; padding: 0 28px 72px; }
 
-    .mono {
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', 'Consolas', monospace;
-    }
-
-    /* ====== HEADER ====== */
+    /* ============================================================
+       HEADER
+       ============================================================ */
     .header {
-      padding: 48px 0 0;
+      padding: 52px 0 0;
       display: flex; align-items: center; justify-content: space-between;
-      opacity: 0; animation: up .6s ease forwards;
+      opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) forwards;
     }
 
-    .wordmark { display: flex; align-items: center; gap: 10px; }
-    .wordmark svg { width: 20px; height: 20px; color: var(--g8); }
+    .brand { display: flex; align-items: center; gap: 14px; }
 
-    .wm-text {
-      font-size: 0.9375rem; font-weight: 500; color: var(--white);
-      letter-spacing: -0.01em;
-    }
-
-    .live-ind {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 0.8125rem; color: var(--g8);
-    }
-
-    .live-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green); position: relative;
-    }
-
-    .live-dot::after {
-      content: ''; position: absolute; inset: -3px; border-radius: 50%;
-      border: 1px solid var(--green); opacity: 0;
-      animation: ping 2.5s cubic-bezier(0,0,.2,1) infinite;
-    }
-
-    @keyframes ping {
-      0% { transform: scale(1); opacity: .5; }
-      100% { transform: scale(2.4); opacity: 0; }
-    }
-
-    /* ====== DIVIDER ====== */
-    .sep {
-      height: 1px; background: var(--g3); margin: 24px 0;
-      opacity: 0; animation: up .6s ease .05s forwards;
-    }
-
-    /* ====== PREMIUM ====== */
-    .prem {
-      padding: 44px 0 48px; text-align: center;
-      opacity: 0; animation: up .6s ease .1s forwards;
-    }
-
-    .prem-ico {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 44px; height: 44px; border-radius: 13px;
+    .brand-mark {
+      width: 32px; height: 32px; border-radius: 9px;
       background: var(--g2); border: 1px solid var(--g4);
-      margin-bottom: 22px; color: var(--g8);
-      transition: border-color .4s;
+      display: grid; place-items: center;
+      font-size: 0.8125rem; font-weight: 600; color: var(--g8);
+      letter-spacing: -0.02em;
     }
 
-    .prem-ico svg { width: 20px; height: 20px; }
-    .prem-ico.ok { border-color: var(--g5); }
-
-    .prem-ey {
-      font-size: 0.8125rem; font-weight: 400; color: var(--g7);
-      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px;
+    .brand-text {
+      font-size: 1rem; font-weight: 500; color: var(--white);
+      letter-spacing: -0.025em;
     }
 
-    .prem-n {
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', monospace;
-      font-size: 4rem; font-weight: 500;
-      letter-spacing: -0.04em; line-height: 1;
-      transition: color .4s;
-    }
-
-    .prem-n.pos { color: var(--green); }
-    .prem-n.neg { color: var(--red); }
-    .prem-n.nil { color: var(--g5); }
-
-    .prem-d {
-      margin-top: 14px;
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', monospace;
-      font-size: 0.9375rem; color: var(--g7);
-    }
-
-    .prem-d em { font-style: normal; color: var(--g9); }
-
-    .prem-c { margin-top: 22px; font-size: 0.875rem; color: var(--g7); }
-
-    /* ====== GRID ====== */
-    .grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-      background: var(--g3); border: 1px solid var(--g3); border-radius: 16px;
-      overflow: hidden; opacity: 0; animation: up .6s ease .18s forwards;
-    }
-
-    .card { background: var(--g1); transition: background .3s; }
-    .card:hover { background: var(--g2); }
-
-    .card-in { padding: 28px 28px 32px; }
-
-    .card-hd {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 26px;
-    }
-
-    .card-lb { display: flex; align-items: center; gap: 12px; }
-
-    .card-ic {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--g3); border: 1px solid var(--g4);
-      display: grid; place-items: center; color: var(--g8);
-      flex-shrink: 0; transition: border-color .3s;
-    }
-
-    .card:hover .card-ic { border-color: var(--g5); }
-    .card-ic svg { width: 16px; height: 16px; }
-
-    .card-nm {
-      font-size: 0.9375rem; font-weight: 500; color: var(--g11);
+    .header-time {
+      font-size: 0.8125rem; color: var(--g6);
       letter-spacing: -0.01em;
     }
 
-    .card-sb { font-size: 0.8125rem; color: var(--g7); margin-top: 2px; }
+    /* ============================================================
+       PREMIUM HERO
+       ============================================================ */
+    .hero {
+      margin: 48px 0;
+      padding: 56px 44px 52px;
+      background: var(--g1);
+      border: 1px solid var(--g3);
+      border-radius: 22px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) .08s forwards;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 35%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--g5), transparent);
+    }
+
+    .hero-glow {
+      position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+      width: 320px; height: 160px;
+      background: radial-gradient(ellipse, var(--green-soft) 0%, transparent 70%);
+      pointer-events: none;
+      transition: opacity .6s ease;
+      opacity: 0;
+    }
+
+    .hero-glow.pos {
+      background: radial-gradient(ellipse, var(--green-soft) 0%, transparent 70%);
+      opacity: 1;
+    }
+
+    .hero-glow.neg {
+      background: radial-gradient(ellipse, var(--red-soft) 0%, transparent 70%);
+      opacity: 1;
+    }
+
+    .hero-icon {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 50px; height: 50px; border-radius: 15px;
+      background: var(--g2); border: 1px solid var(--g4);
+      color: var(--g7); margin-bottom: 26px;
+      transition: border-color .4s, color .4s;
+    }
+
+    .hero-icon svg { width: 22px; height: 22px; }
+    .hero-icon.ok { border-color: var(--g5); color: var(--g8); }
+
+    .hero-label {
+      position: relative; z-index: 1;
+      font-size: 0.8125rem; font-weight: 500; color: var(--g6);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero-value {
+      position: relative; z-index: 1;
+      font-size: 5rem; font-weight: 700;
+      letter-spacing: -0.05em; line-height: 1;
+      transition: color .4s ease;
+    }
+
+    .hero-value.pos { color: var(--green); }
+    .hero-value.neg { color: var(--red); }
+    .hero-value.nil { color: var(--g4); }
+
+    .hero-sub {
+      position: relative; z-index: 1;
+      margin-top: 18px;
+      font-size: 1.0625rem; font-weight: 400; color: var(--g6);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-sub strong { font-weight: 600; color: var(--g9); }
+
+    .hero-note {
+      position: relative; z-index: 1;
+      margin-top: 28px;
+      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
+      letter-spacing: -0.005em;
+    }
+
+    /* ============================================================
+       CARDS
+       ============================================================ */
+    .cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) .16s forwards;
+    }
+
+    .card {
+      background: var(--g1);
+      border: 1px solid var(--g3);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      transition: border-color .3s ease, transform .35s cubic-bezier(.16,1,.3,1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 30%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--g4), transparent);
+      opacity: 0; transition: opacity .3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--g4);
+      transform: translateY(-3px);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-inner { padding: 30px 30px 34px; }
+
+    .card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .card-id { display: flex; align-items: center; gap: 14px; }
+
+    .card-icon {
+      width: 42px; height: 42px; border-radius: 13px;
+      background: var(--g2); border: 1px solid var(--g4);
+      display: grid; place-items: center; color: var(--g7);
+      transition: border-color .3s, color .3s;
+    }
+
+    .card:hover .card-icon { border-color: var(--g5); color: var(--g8); }
+    .card-icon svg { width: 18px; height: 18px; }
+
+    .card-title {
+      font-size: 1.0625rem; font-weight: 500; color: var(--g11);
+      letter-spacing: -0.025em;
+    }
+
+    .card-subtitle {
+      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
+      margin-top: 3px; letter-spacing: -0.005em;
+    }
 
     /* Badges */
-    .bg {
-      font-size: 0.6875rem; font-weight: 500; text-transform: uppercase;
-      letter-spacing: 0.04em; padding: 5px 10px 4px; border-radius: 7px;
-      display: inline-flex; align-items: center; gap: 6px;
+    .badge {
+      font-size: 0.6875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 5px 11px; border-radius: 9px;
+      display: inline-flex; align-items: center; gap: 7px;
     }
 
-    .bg-d { width: 5px; height: 5px; border-radius: 50%; }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
 
-    .bg-live { color: var(--green); background: var(--green-m); }
-    .bg-live .bg-d { background: var(--green); animation: bk 2s ease-in-out infinite; }
-
-    .bg-del { color: var(--amber); background: var(--amber-m); }
-    .bg-del .bg-d { background: var(--amber); animation: bk-amber 3s ease-in-out infinite; }
-
-    @keyframes bk {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.1; }
+    .badge-live {
+      color: var(--green); background: var(--green-soft);
+      border: 1px solid var(--green-glow);
     }
 
-    @keyframes bk-amber {
-      0%, 100% { opacity: 0.9; }
-      50% { opacity: 0.15; }
+    .badge-live .badge-dot {
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green-glow);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    .badge-delayed {
+      color: var(--amber); background: var(--amber-soft);
+      border: 1px solid var(--amber-glow);
+    }
+
+    .badge-delayed .badge-dot {
+      background: var(--amber);
+      box-shadow: 0 0 6px var(--amber-glow);
+      animation: blink-slow 3s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.12; transform: scale(0.75); }
+    }
+
+    @keyframes blink-slow {
+      0%, 100% { opacity: 0.9; transform: scale(1); }
+      50% { opacity: 0.12; transform: scale(0.75); }
     }
 
     /* Price */
-    .pr { display: flex; align-items: baseline; gap: 8px; }
+    .price-row { display: flex; align-items: baseline; gap: 10px; }
 
-    .pv {
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', monospace;
-      font-size: 2.25rem; font-weight: 500;
-      color: var(--white); letter-spacing: -0.035em; line-height: 1;
+    .price-num {
+      font-size: 2.75rem; font-weight: 700; color: var(--white);
+      letter-spacing: -0.04em; line-height: 1;
     }
 
-    .pu { font-size: 0.8125rem; color: var(--g7); }
+    .price-cur { font-size: 0.9375rem; font-weight: 400; color: var(--g6); }
 
-    .pd { margin-top: 7px; font-size: 0.8125rem; color: var(--g7); }
-
-    /* Change pill */
-    .pl {
-      display: inline-flex; align-items: center; gap: 5px; margin-top: 18px;
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', monospace;
-      font-size: 0.8125rem; font-weight: 500;
-      padding: 6px 12px; border-radius: 8px; line-height: 1;
+    .price-desc {
+      margin-top: 8px;
+      font-size: 0.8125rem; font-weight: 400; color: var(--g6);
     }
 
-    .pl.up { color: var(--green); background: var(--green-m); }
-    .pl.dn { color: var(--red); background: var(--red-m); }
-    .pl.fl { color: var(--g8); background: var(--g3); }
+    /* Change */
+    .change {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 20px;
+      font-size: 0.875rem; font-weight: 600;
+      padding: 7px 14px; border-radius: 10px;
+      letter-spacing: -0.01em;
+    }
 
-    .pl-a { font-size: 0.5625rem; }
+    .change.up { color: var(--green); background: var(--green-soft); }
+    .change.dn { color: var(--red); background: var(--red-soft); }
+    .change.fl { color: var(--g7); background: var(--g3); }
+
+    .change-arr { font-size: 0.625rem; }
 
     /* Sep & Meta */
-    .cs { height: 1px; background: var(--g3); margin: 22px 0 18px; }
+    .card-sep { height: 1px; background: var(--g3); margin: 26px 0 20px; }
 
-    .mt { display: flex; flex-direction: column; gap: 10px; }
+    .meta { display: flex; flex-direction: column; gap: 13px; }
 
-    .mi { display: flex; justify-content: space-between; align-items: center; }
+    .meta-row { display: flex; justify-content: space-between; align-items: center; }
 
-    .mk { font-size: 0.8125rem; color: var(--g7); }
+    .meta-k { font-size: 0.8125rem; font-weight: 400; color: var(--g6); }
 
-    .mv {
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', monospace;
-      font-size: 0.8125rem; color: var(--g9);
+    .meta-v {
+      font-size: 0.9375rem; font-weight: 600; color: var(--g9);
+      letter-spacing: -0.02em;
     }
 
-    /* Ranges */
-    .rg { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px; }
-
-    .rb {
-      background: var(--g2); border: 1px solid var(--g3); border-radius: 10px;
-      padding: 12px 8px; text-align: center; transition: border-color .2s;
+    /* Range chips */
+    .ranges {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px; margin-top: 24px;
     }
 
-    .rb:hover { border-color: var(--g5); }
-
-    .rb-l {
-      font-size: 0.6875rem; text-transform: uppercase;
-      letter-spacing: 0.06em; color: var(--g7); margin-bottom: 5px;
+    .chip {
+      background: var(--g2); border: 1px solid var(--g3);
+      border-radius: 13px; padding: 16px 10px; text-align: center;
+      transition: border-color .25s ease, transform .25s ease;
     }
 
-    .rb-v {
-      font-family: 'SF Mono', 'Menlo', 'Cascadia Mono', monospace;
-      font-size: 0.875rem; color: var(--g10);
+    .chip:hover { border-color: var(--g5); transform: translateY(-1px); }
+
+    .chip-label {
+      font-size: 0.6875rem; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--g6); margin-bottom: 7px;
     }
 
-    /* States */
-    .sl, .se { padding: 56px 0; text-align: center; }
-
-    .ld {
-      width: 22px; height: 22px; border: 1.5px solid var(--g4);
-      border-top-color: var(--g7); border-radius: 50%;
-      margin: 0 auto 14px; animation: sp .65s linear infinite;
+    .chip-val {
+      font-size: 1rem; font-weight: 600; color: var(--g10);
+      letter-spacing: -0.02em;
     }
 
-    @keyframes sp { to { transform: rotate(360deg); } }
+    /* ============================================================
+       STATES
+       ============================================================ */
+    .state-load, .state-err { padding: 60px 0; text-align: center; }
 
-    .st { font-size: 0.875rem; color: var(--g7); }
-
-    .er { font-size: 0.875rem; color: var(--red); opacity: .8; margin-bottom: 16px; }
-
-    .bt {
-      font-family: 'Helvetica Neue', sans-serif; font-size: 0.8125rem; font-weight: 500;
-      color: var(--g10); background: var(--g3); border: 1px solid var(--g4);
-      border-radius: 8px; padding: 8px 22px; cursor: pointer; transition: all .15s;
+    .spinner {
+      width: 24px; height: 24px;
+      border: 2px solid var(--g3); border-top-color: var(--g6);
+      border-radius: 50%; margin: 0 auto 16px;
+      animation: spin .7s linear infinite;
     }
 
-    .bt:hover { background: var(--g4); border-color: var(--g5); color: var(--white); }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Footer */
-    .fo {
-      margin-top: 36px; text-align: center;
-      opacity: 0; animation: up .6s ease .26s forwards;
+    .state-text { font-size: 0.875rem; color: var(--g6); }
+
+    .err-text { font-size: 0.875rem; color: var(--red); opacity: .75; margin-bottom: 18px; }
+
+    .btn {
+      font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+      font-size: 0.8125rem; font-weight: 600;
+      color: var(--g9); background: var(--g3); border: 1px solid var(--g4);
+      border-radius: 10px; padding: 10px 26px; cursor: pointer;
+      transition: all .2s ease;
     }
 
-    .fo p { font-size: 0.75rem; color: var(--g6); line-height: 1.8; }
+    .btn:hover { background: var(--g4); border-color: var(--g5); color: var(--white); }
 
-    /* Animation */
-    @keyframes up {
-      from { opacity: 0; transform: translateY(12px); }
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      margin-top: 44px; padding-top: 24px;
+      border-top: 1px solid var(--g3);
+      text-align: center;
+      opacity: 0; animation: rise .7s cubic-bezier(.16,1,.3,1) .24s forwards;
+    }
+
+    .footer p { font-size: 0.75rem; color: var(--g6); line-height: 1.9; }
+
+    /* ============================================================
+       ANIMATIONS
+       ============================================================ */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(22px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .fl { animation: nf .5s ease; }
-    @keyframes nf { 0% { opacity: .4; } 100% { opacity: 1; } }
-
-    /* Responsive */
-    @media (max-width: 640px) {
-      .page { padding: 0 16px 48px; }
-      .header { padding-top: 32px; }
-      .prem { padding: 32px 0 36px; }
-      .prem-n { font-size: 2.75rem; }
-      .prem-d { font-size: 0.8125rem; }
-      .prem-c { font-size: 0.8125rem; }
-      .grid { grid-template-columns: 1fr; border-radius: 14px; }
-      .card-in { padding: 22px 20px 26px; }
-      .pv { font-size: 1.75rem; }
-      .card-ic { width: 32px; height: 32px; border-radius: 9px; }
-      .card-ic svg { width: 14px; height: 14px; }
-      .prem-ico { width: 40px; height: 40px; border-radius: 11px; }
-      .prem-ico svg { width: 18px; height: 18px; }
-      .rg { gap: 6px; }
-      .rb { padding: 10px 6px; border-radius: 8px; }
+    .num-flash { animation: flash-num .45s ease; }
+    @keyframes flash-num {
+      0% { opacity: .25; transform: translateY(5px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 380px) {
-      .prem-n { font-size: 2.25rem; }
-      .pv { font-size: 1.5rem; }
-      .card-in { padding: 18px 16px 22px; }
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 680px) {
+      .page { padding: 0 18px 56px; }
+      .header { padding-top: 36px; }
+      .hero { margin: 36px 0; padding: 44px 24px 40px; border-radius: 18px; }
+      .hero-value { font-size: 3.25rem; }
+      .hero-sub { font-size: 0.9375rem; }
+      .cards { grid-template-columns: 1fr; gap: 12px; }
+      .card { border-radius: 18px; }
+      .card-inner { padding: 26px 24px 30px; }
+      .price-num { font-size: 2.125rem; }
+      .card-icon { width: 38px; height: 38px; border-radius: 11px; }
+      .card-icon svg { width: 16px; height: 16px; }
+      .hero-icon { width: 44px; height: 44px; border-radius: 13px; }
+      .hero-icon svg { width: 20px; height: 20px; }
+      .ranges { gap: 8px; }
+      .chip { padding: 14px 8px; border-radius: 11px; }
+    }
+
+    @media (max-width: 400px) {
+      .hero-value { font-size: 2.625rem; }
+      .price-num { font-size: 1.75rem; }
+      .card-inner { padding: 22px 20px 26px; }
+      .hero { padding: 36px 18px 32px; }
     }
   </style>
 </head>
@@ -323,139 +425,243 @@
 <div class="page">
 
   <header class="header">
-    <div class="wordmark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 9.5c0-1.38 1.79-2.5 4-2.5s4 1.12 4 2.5-1.79 2.5-4 2.5-4 1.12-4 2.5 1.79 2.5 4 2.5"/></svg>
-      <span class="wm-text">Silver Premium</span>
+    <div class="brand">
+      <div class="brand-mark">Ag</div>
+      <span class="brand-text">Silver Premium</span>
     </div>
-    <div class="live-ind" id="status">
-      <div class="live-dot"></div>
-      <span id="sl">Connecting</span>
-    </div>
+    <div class="header-time" id="clock"></div>
   </header>
 
-  <div class="sep"></div>
-
-  <section class="prem">
-    <div class="prem-ico" id="pi">
+  <!-- PREMIUM HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-glow" id="hero-glow"></div>
+    <div class="hero-icon" id="hero-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7l7-4 7 4"/><path d="M5 7l-1 6c0 1.66 1.34 2 2 2h0c.66 0 2-.34 2-2L7 7"/><path d="M17 7l-1 6c0 1.66 1.34 2 2 2h0c.66 0 2-.34 2-2l-1-6"/></svg>
     </div>
-    <div class="prem-ey">Shanghai Premium</div>
-    <div class="prem-n nil" id="pp">--%</div>
-    <div class="prem-d" id="pu">Loading</div>
-    <div class="prem-c" id="pc">SGE Ag(T+D) minus COMEX XAG/USD</div>
+    <div class="hero-label">Premium Shanghai</div>
+    <div class="hero-value nil" id="h-pct">--%</div>
+    <div class="hero-sub" id="h-usd">Carregando dados...</div>
+    <div class="hero-note" id="h-note">SGE Ag(T+D) em relacao ao COMEX XAG/USD</div>
   </section>
 
-  <div class="sep"></div>
+  <!-- CARDS -->
+  <div class="cards">
 
-  <div class="grid">
+    <!-- SGE -->
     <div class="card">
-      <div class="card-in">
-        <div class="card-hd">
-          <div class="card-lb">
-            <div class="card-ic">
+      <div class="card-inner">
+        <div class="card-top">
+          <div class="card-id">
+            <div class="card-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><path d="M9 13h6"/><path d="M9 9h6"/></svg>
             </div>
-            <div><div class="card-nm">Shanghai SGE</div><div class="card-sb">Ag(T+D)</div></div>
+            <div>
+              <div class="card-title">Shanghai SGE</div>
+              <div class="card-subtitle">Ag(T+D)</div>
+            </div>
           </div>
-          <div class="bg bg-del"><span class="bg-d"></span>Delayed</div>
+          <div class="badge badge-delayed"><span class="badge-dot"></span>Delayed</div>
         </div>
-        <div id="sb">
-          <div class="sl"><div class="ld"></div><div class="st">Fetching SGE</div></div>
+        <div id="sge-body">
+          <div class="state-load"><div class="spinner"></div><div class="state-text">Buscando dados SGE</div></div>
         </div>
       </div>
     </div>
+
+    <!-- COMEX -->
     <div class="card">
-      <div class="card-in">
-        <div class="card-hd">
-          <div class="card-lb">
-            <div class="card-ic">
+      <div class="card-inner">
+        <div class="card-top">
+          <div class="card-id">
+            <div class="card-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 16l4-6 4 4 4-8"/></svg>
             </div>
-            <div><div class="card-nm">COMEX</div><div class="card-sb">XAG / USD</div></div>
+            <div>
+              <div class="card-title">COMEX</div>
+              <div class="card-subtitle">XAG / USD</div>
+            </div>
           </div>
-          <div class="bg bg-live"><span class="bg-d"></span>Live</div>
+          <div class="badge badge-live"><span class="badge-dot"></span>Live</div>
         </div>
-        <div id="cb">
-          <div class="sl"><div class="ld"></div><div class="st">Fetching COMEX</div></div>
+        <div id="comex-body">
+          <div class="state-load"><div class="spinner"></div><div class="state-text">Buscando dados COMEX</div></div>
         </div>
       </div>
     </div>
+
   </div>
 
-  <div class="fo"><p>Data refreshes every 30 seconds. SGE quotes are delayed. FX rate: USD/CNY.</p></div>
+  <footer class="footer">
+    <p>Dados atualizados a cada 30 segundos. Cotacoes SGE com atraso. Taxa de cambio USD/CNY.</p>
+  </footer>
 
 </div>
 
 <script>
-const API='/api/prices',POLL=30000;
-const f=(n,d=2)=>n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
-const dr=v=>v>0?'up':v<0?'dn':'fl';
-const ar=v=>v>0?'\u25B2':v<0?'\u25BC':'\u2014';
-function fl(e){if(!e)return;e.classList.remove('fl');void e.offsetWidth;e.classList.add('fl')}
+const API = '/api/prices';
+const POLL = 30000;
 
-function rC(c){
-  const d=dr(c.changePercent);
-  document.getElementById('cb').innerHTML=`
-    <div class="pr"><span class="pv" id="cv">${f(c.price,4)}</span><span class="pu">USD/oz</span></div>
-    <div class="pd">per troy ounce</div>
-    <div class="pl ${d}"><span class="pl-a">${ar(c.changePercent)}</span>${f(Math.abs(c.change),4)}&nbsp;&nbsp;${f(Math.abs(c.changePercent),2)}%</div>
-    <div class="cs"></div>
-    <div class="mt">
-      <div class="mi"><span class="mk">Prev close</span><span class="mv">${f(c.prevClose,4)}</span></div>
-      <div class="mi"><span class="mk">Updated</span><span class="mv">${c.timestamp}</span></div>
-    </div>`;
-  fl(document.getElementById('cv'));
+const fmt = (v, d=2) => v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmtUS = (v, d=2) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+function flash(el) {
+  if (!el) return;
+  el.classList.remove('num-flash');
+  void el.offsetWidth;
+  el.classList.add('num-flash');
 }
 
-function rS(s,fx){
-  document.getElementById('sb').innerHTML=`
-    <div class="pr"><span class="pv" id="sv">${f(s.usd_per_oz,4)}</span><span class="pu">USD/oz</span></div>
-    <div class="pd">converted from ${f(s.rmb_per_kg,0)} RMB/kg</div>
-    <div class="rg">
-      <div class="rb"><div class="rb-l">Open</div><div class="rb-v">${s.rmb_open?f(s.rmb_open,0):'\u2014'}</div></div>
-      <div class="rb"><div class="rb-l">High</div><div class="rb-v">${s.rmb_high?f(s.rmb_high,0):'\u2014'}</div></div>
-      <div class="rb"><div class="rb-l">Low</div><div class="rb-v">${s.rmb_low?f(s.rmb_low,0):'\u2014'}</div></div>
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleDateString('pt-BR', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+function renderCOMEX(c) {
+  const cls = c.changePercent > 0 ? 'up' : c.changePercent < 0 ? 'dn' : 'fl';
+  const arrow = c.changePercent > 0 ? '\u25B2' : c.changePercent < 0 ? '\u25BC' : '\u2014';
+
+  document.getElementById('comex-body').innerHTML = `
+    <div class="price-row">
+      <span class="price-num" id="comex-p">${fmtUS(c.price, 4)}</span>
+      <span class="price-cur">USD/oz</span>
     </div>
-    <div class="cs"></div>
-    <div class="mt">
-      <div class="mi"><span class="mk">RMB/kg</span><span class="mv">${f(s.rmb_per_kg,0)}</span></div>
-      <div class="mi"><span class="mk">USD/CNY</span><span class="mv">${f(fx.usd_cny,4)}</span></div>
+    <div class="price-desc">por onca troy</div>
+    <div class="change ${cls}">
+      <span class="change-arr">${arrow}</span>
+      ${fmtUS(Math.abs(c.change), 4)}&nbsp;&nbsp;&nbsp;${fmtUS(Math.abs(c.changePercent), 2)}%
+    </div>
+    <div class="card-sep"></div>
+    <div class="meta">
+      <div class="meta-row">
+        <span class="meta-k">Fechamento anterior</span>
+        <span class="meta-v">${fmtUS(c.prevClose, 4)}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-k">Atualizado</span>
+        <span class="meta-v">${c.timestamp}</span>
+      </div>
     </div>`;
-  fl(document.getElementById('sv'));
+  flash(document.getElementById('comex-p'));
 }
 
-function rP(p){
-  const e=document.getElementById('pp'),u=document.getElementById('pu'),c=document.getElementById('pc'),i=document.getElementById('pi');
-  const s=p.percent>=0?'+':'';
-  e.className='prem-n '+(p.percent>0?'pos':p.percent<0?'neg':'nil');
-  e.textContent=s+f(p.percent,2)+'%';
-  const us=p.usd>=0?'+':'';
-  u.innerHTML='<em>'+us+f(p.usd,4)+'</em> USD per ounce';
-  i.classList.add('ok');
-  c.textContent=p.percent>0?'Shanghai silver trades at a premium to international spot':p.percent<0?'Shanghai silver trades at a discount to international spot':'Prices are aligned';
-  fl(e);
+function renderSGE(s, fx) {
+  document.getElementById('sge-body').innerHTML = `
+    <div class="price-row">
+      <span class="price-num" id="sge-p">${fmtUS(s.usd_per_oz, 4)}</span>
+      <span class="price-cur">USD/oz</span>
+    </div>
+    <div class="price-desc">convertido de ${fmt(s.rmb_per_kg, 0)} RMB/kg</div>
+    <div class="ranges">
+      <div class="chip">
+        <div class="chip-label">Abertura</div>
+        <div class="chip-val">${s.rmb_open ? fmt(s.rmb_open, 0) : '\u2014'}</div>
+      </div>
+      <div class="chip">
+        <div class="chip-label">Maxima</div>
+        <div class="chip-val">${s.rmb_high ? fmt(s.rmb_high, 0) : '\u2014'}</div>
+      </div>
+      <div class="chip">
+        <div class="chip-label">Minima</div>
+        <div class="chip-val">${s.rmb_low ? fmt(s.rmb_low, 0) : '\u2014'}</div>
+      </div>
+    </div>
+    <div class="card-sep"></div>
+    <div class="meta">
+      <div class="meta-row">
+        <span class="meta-k">RMB/kg</span>
+        <span class="meta-v">${fmt(s.rmb_per_kg, 0)}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-k">USD/CNY</span>
+        <span class="meta-v">${fmtUS(fx.usd_cny, 4)}</span>
+      </div>
+    </div>`;
+  flash(document.getElementById('sge-p'));
 }
 
-function sE(id,m){document.getElementById(id).innerHTML=`<div class="se"><div class="er">${m}</div><button class="bt" onclick="ld()">Retry</button></div>`}
-function rR(){document.getElementById('pp').textContent='--%';document.getElementById('pp').className='prem-n nil';document.getElementById('pu').textContent='Waiting for data'}
+function renderPremium(p) {
+  const el = document.getElementById('h-pct');
+  const sub = document.getElementById('h-usd');
+  const note = document.getElementById('h-note');
+  const icon = document.getElementById('hero-icon');
+  const glow = document.getElementById('hero-glow');
 
-let L=null;
-async function ld(){
-  document.getElementById('sl').textContent='Updating';
-  try{
-    const r=await fetch(API),t=await r.text();
-    let d;try{d=JSON.parse(t)}catch{throw new Error('Invalid response')}
-    L=d;
-    d.comex?rC(d.comex):sE('cb',d.errors?.find(e=>e.source==='comex')?.message||'Unavailable');
-    d.sge&&d.fx?rS(d.sge,d.fx):sE('sb',d.errors?.find(e=>e.source==='sge'||e.source==='fx')?.message||'Unavailable');
-    d.premium?rP(d.premium):rR();
-    document.getElementById('sl').textContent='Live';
-  }catch(e){
-    document.getElementById('sl').textContent='Offline';
-    if(!L){sE('sb',e.message);sE('cb',e.message);rR()}
+  const sign = p.percent >= 0 ? '+' : '';
+  const cls = p.percent > 0 ? 'pos' : p.percent < 0 ? 'neg' : 'nil';
+
+  el.className = 'hero-value ' + cls;
+  el.textContent = sign + fmtUS(p.percent, 2) + '%';
+
+  const uSign = p.usd >= 0 ? '+' : '';
+  sub.innerHTML = '<strong>' + uSign + fmtUS(p.usd, 4) + '</strong> USD por onca';
+
+  icon.classList.add('ok');
+
+  glow.className = 'hero-glow';
+  if (p.percent > 0) {
+    glow.classList.add('pos');
+    note.textContent = 'Prata em Shanghai opera com premio sobre o mercado internacional';
+  } else if (p.percent < 0) {
+    glow.classList.add('neg');
+    note.textContent = 'Prata em Shanghai opera com desconto sobre o mercado internacional';
+  } else {
+    note.textContent = 'Precos alinhados entre Shanghai e COMEX';
+  }
+
+  flash(el);
+}
+
+function showErr(id, msg) {
+  document.getElementById(id).innerHTML = `
+    <div class="state-err">
+      <div class="err-text">${msg}</div>
+      <button class="btn" onclick="load()">Tentar novamente</button>
+    </div>`;
+}
+
+function resetPremium() {
+  document.getElementById('h-pct').textContent = '--%';
+  document.getElementById('h-pct').className = 'hero-value nil';
+  document.getElementById('h-usd').textContent = 'Aguardando dados...';
+  document.getElementById('hero-glow').className = 'hero-glow';
+}
+
+let last = null;
+
+async function load() {
+  try {
+    const r = await fetch(API);
+    const t = await r.text();
+    let d;
+    try { d = JSON.parse(t); } catch { throw new Error('Resposta invalida do servidor'); }
+    last = d;
+
+    d.comex
+      ? renderCOMEX(d.comex)
+      : showErr('comex-body', d.errors?.find(e => e.source === 'comex')?.message || 'Indisponivel');
+
+    d.sge && d.fx
+      ? renderSGE(d.sge, d.fx)
+      : showErr('sge-body', d.errors?.find(e => e.source === 'sge' || e.source === 'fx')?.message || 'Indisponivel');
+
+    d.premium ? renderPremium(d.premium) : resetPremium();
+
+  } catch (e) {
+    if (!last) {
+      showErr('sge-body', e.message);
+      showErr('comex-body', e.message);
+      resetPremium();
+    }
   }
 }
-ld();setInterval(ld,POLL);
+
+load();
+setInterval(load, POLL);
 </script>
 </body>
 </html>
